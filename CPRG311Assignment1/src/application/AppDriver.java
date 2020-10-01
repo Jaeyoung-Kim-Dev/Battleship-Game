@@ -2,7 +2,6 @@ package application;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import gui.MainWindow;
 
@@ -23,8 +22,9 @@ public class AppDriver extends Application  {
 
 		MainWindow mainWindow= new MainWindow();
 		
-		Scene scene = new Scene(mainWindow.base(), 2000, 1000);
-
+		Scene scene = new Scene(mainWindow.base());
+		
+		primaryStage.setTitle("Battleship Game");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
