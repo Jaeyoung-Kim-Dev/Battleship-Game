@@ -1,4 +1,4 @@
-package gui;
+package client;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,7 +26,15 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class Connection {
+	
+	private Socket socket;
+	
+	private Chat chat;
+	
+	private ObjectOutputStream objectOutputStream;
 
+	private ObjectInputStream objectInputStream;
+	
 	public HBox connectionArea() {
 
 		HBox hbox = new HBox();
@@ -85,26 +93,27 @@ public class Connection {
 
 		grid.setGridLinesVisible(false);
 
-		Button btn = new Button("Connect");
+		Button buttonConnect = new Button("Connect");
 		HBox hbBtn = new HBox(10);
 		hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
-		hbBtn.getChildren().add(btn);
+		hbBtn.getChildren().add(buttonConnect);
 		grid.add(hbBtn, 1, 6);
 
 		final Text actiontarget = new Text();
 		grid.add(actiontarget, 1, 6);
 		
 				
-		btn.setOnAction(event -> {
+		buttonConnect.setOnAction(event -> {
 		
 			String username = userNameField.getText();
 			String ip = addressField.getText();
 			int port = Integer.parseInt(portField.getText());
 			
 			try {
-				Socket socket = new Socket(ip, port);
+				socket = new Socket(ip, port);
 				
-				this.addMessage("Connected!");
+				//chat.addMessage("Connected!");
+				System.out.println("C!");
 				
 				OutputStream outputStream = socket.getOutputStream();
 				objectOutputStream = new ObjectOutputStream(outputStream);
@@ -112,7 +121,7 @@ public class Connection {
 				InputStream inputStream = socket.getInputStream();
 				objectInputStream = new ObjectInputStream(inputStream);
 				
-				ServerHandler serverHandler = new ServerHandler(this, socket, objectInputStream);
+				ServerHandler serverHandler = new ServerHandler(chat, socket, objectInputStream);
 				Thread thread = new Thread(serverHandler);
 				
 				thread.start();
@@ -120,14 +129,11 @@ public class Connection {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				
-				this.addMessage("Unable to connect");
+				chat.addMessage("Unable to connect");
 			}
 
 		});
 		return grid;
 	}
 	
-	public void addMessage(String message) {
-		this.chatListModel.addElement(message);
-	}
 }
