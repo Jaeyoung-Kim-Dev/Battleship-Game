@@ -1,9 +1,9 @@
 package application;
 
+import client.MainWindow;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import gui.MainWindow;
 
 /**
  * Includes main method for Battleship game.

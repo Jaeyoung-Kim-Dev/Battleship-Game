@@ -1,4 +1,4 @@
-package gui;
+package client;
 
 import javafx.geometry.Insets;
 import javafx.scene.layout.BorderPane;
