@@ -29,7 +29,7 @@ public class Connection {
 	
 	private Socket socket;
 	
-	private Chat chat;
+	///private Chat chat;
 	
 	private OutputStream outputStream;
 	
@@ -40,12 +40,20 @@ public class Connection {
 	private ObjectInputStream objectInputStream;
 	
 	
-	public Connection(Chat chat, ObjectOutputStream objectOutputStream, ObjectInputStream objectInputStream) {
-		this.chat = chat;
-		this.objectOutputStream = objectOutputStream;
-		this.objectInputStream = objectInputStream;
+	public Connection() { //ObjectOutputStream objectOutputStream, ObjectInputStream objectInputStream
+		//this.chat = chat;
+		//this.objectOutputStream = objectOutputStream;
+		//this.objectInputStream = objectInputStream;
 	}
 	
+	public ObjectOutputStream getObjectOutputStream() {
+		return objectOutputStream;
+	}
+
+	public ObjectInputStream getObjectInputStream() {
+		return objectInputStream;
+	}
+
 	public HBox connectionArea() {
 
 		HBox hbox = new HBox();
@@ -123,7 +131,8 @@ public class Connection {
 			try {
 				socket = new Socket(ip, port);
 				
-				chat.addMessage("Connected!");				
+				//chat.addMessage("Connected!");				
+				System.out.println("Connected!"); //todo: delete
 				
 				outputStream = socket.getOutputStream();
 				objectOutputStream = new ObjectOutputStream(outputStream);
@@ -139,7 +148,8 @@ public class Connection {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				
-				chat.addMessage("Unable to connect");
+				//chat.addMessage("Unable to connect");
+				System.out.println("Unable to connect!"); //todo: delete
 			}
 
 		});

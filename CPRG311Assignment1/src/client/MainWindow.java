@@ -18,9 +18,10 @@ public class MainWindow {
 	private Connection connection;
 	
 	public MainWindow() {
-		this.chat = new Chat();
+		this.connection = new Connection(); //objectOutputStream, objectInputStream
+		this.chat = new Chat(objectOutputStream, objectInputStream);
 		this.objectOutputStream = chat.getObjectOutputStream();
-		this.connection = new Connection(chat, objectOutputStream, objectInputStream);
+		
 	}
 	
 	public Parent base() {
