@@ -31,9 +31,11 @@ import problemdomain.Message;
 
 public class MainWindow {
 
+	//private Chat chat;
+	
 	private Socket socket;
 	
-	private Chat chat;
+	///private Chat chat;
 	
 	private String username;
 	
@@ -45,16 +47,20 @@ public class MainWindow {
 	
 	private ObjectInputStream objectInputStream;
 
+	private Button buttonConnect;
 	
+	private Button buttonDisconnect;
 	//private Connection connection;
 	
-	//private ListView<String> messageList;
+	private Stage connectForm;
+	
+	private ListView<String> messageList;
 	
 	public MainWindow() {
-		
 		//this.connection = new Connection(); //objectOutputStream, objectInputStream
 		//this.chat = new Chat(objectOutputStream, objectInputStream);
 		//this.objectOutputStream = chat.getObjectOutputStream();
+		
 	}
 	
 	public Parent base() {
@@ -97,60 +103,70 @@ public class MainWindow {
 		BorderPane connectionBaord = new BorderPane();
 		
 		connectionBaord.setTop(connectionArea());
-		this.chat = new Chat(objectOutputStream, objectInputStream, username);
-		connectionBaord.setCenter(chat.chatArea());
+		connectionBaord.setCenter(chatArea());
 		
 		return connectionBaord;
 	}
 	
-	/*
-	 * public Pane chatArea() {
-	 * 
-	 * BorderPane chat = new BorderPane();
-	 * 
-	 * chat.setCenter(chatList()); chat.setBottom(typeArea());
-	 * 
-	 * return chat; }
-	 * 
-	 * public ListView<String> chatList() {
-	 * 
-	 * messageList = new ListView<String>();
-	 * 
-	 * return messageList; }
-	 * 
-	 * private Pane typeArea() {
-	 * 
-	 * BorderPane chat = new BorderPane();
-	 * 
-	 * TextField userTextField = new TextField(); Button buttonSend = new
-	 * Button("SEND");
-	 * 
-	 * chat.setCenter(userTextField); chat.setRight(buttonSend);
-	 * 
-	 * buttonSend.setOnAction(event -> { String text = userTextField.getText();
-	 * 
-	 * // Create a Message object. Message send = new Message(this.username, text);
-	 * //Message send = new Message("noname", text);
-	 * 
-	 * try { // Send Message to the server.
-	 * this.objectOutputStream.writeObject(send);
-	 * 
-	 * // If it's sent successfully, clear the text field.
-	 * userTextField.setText("");
-	 * 
-	 * // If it's sent successfully, add message to chat list.
-	 * this.addMessage(send.toString()); } catch (IOException e) { // TODO
-	 * Auto-generated catch block e.printStackTrace();
-	 * 
-	 * this.addMessage("Unable to send message."); } });
-	 * 
-	 * return chat; }
-	 * 
-	 * 
-	 * public void addMessage(String message) {
-	 * this.messageList.getItems().add(message);
-	 * //this.messageList.getItems().add("msg added"); }
-	 */
+	public Pane chatArea() {
+
+		BorderPane chat = new BorderPane();
+
+		chat.setCenter(chatList());
+		chat.setBottom(typeArea());
+		
+		return chat;
+	}
+
+	public ListView<String> chatList() {
+		
+		messageList = new ListView<String>();
+		
+		return messageList;
+	}
+
+	private Pane typeArea() {
+
+		BorderPane chat = new BorderPane();
+
+		TextField userTextField = new TextField();
+		Button buttonSend = new Button("SEND");
+
+		chat.setCenter(userTextField);
+		chat.setRight(buttonSend);
+
+		buttonSend.setOnAction(event -> {
+			String text = userTextField.getText();
+			
+			// Create a Message object.
+			Message send = new Message(this.username, text);
+			//Message send = new Message("noname", text);
+			
+			try {
+				// Send Message to the server.
+				this.objectOutputStream.writeObject(send);
+				
+				// If it's sent successfully, clear the text field.
+				userTextField.setText("");
+				
+				// If it's sent successfully, add message to chat list.
+				this.addMessage(send.toString());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				
+				this.addMessage("Unable to send message.");
+			}
+		});
+		
+		return chat;
+	}
+	
+
+	public void addMessage(String message) {
+		this.messageList.getItems().add(message);
+		//this.messageList.getItems().add("msg added");
+	}
 	
 	public HBox connectionArea() {
 
@@ -160,27 +176,50 @@ public class MainWindow {
 		hbox.setStyle("-fx-background-color: #336699;");
 		hbox.setAlignment(Pos.CENTER);
 
-		Button buttonConnect = new Button("Connect");
+		buttonConnect = new Button("Connect");
 		buttonConnect.setPrefSize(150, 40);
 
-		Button buttonDisconnect = new Button("Disconnect");
+		buttonDisconnect = new Button("Disconnect");
 		buttonDisconnect.setPrefSize(150, 40);
+		buttonDisconnect.setDisable(true);
 		hbox.getChildren().addAll(buttonConnect, buttonDisconnect);
 		
 		buttonConnect.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				final Stage dialog = new Stage();
-				dialog.initModality(Modality.APPLICATION_MODAL);
-				dialog.setTitle("Connect to the server");				
+				connectForm = new Stage();
+				connectForm.initModality(Modality.APPLICATION_MODAL);
+				connectForm.setTitle("Connect to the server");				
 				VBox dialogVbox = new VBox(20);				
 				dialogVbox.getChildren().add(setConnection());
 				Scene dialogScene = new Scene(dialogVbox, 400, 260);
-				dialog.setScene(dialogScene);
-				dialog.show();
+				connectForm.setScene(dialogScene);
+				connectForm.show();				
 			}
 		});
 
+		buttonDisconnect.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				try {
+					objectInputStream.close();
+					objectOutputStream.close();
+					
+					socket.close();
+					
+					buttonConnect.setDisable(false);
+					buttonDisconnect.setDisable(true);
+					
+					addMessage("Disconnected.");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					
+					addMessage("Unable to disconnect.");
+				}
+			}
+		});
+		
 		return hbox;
 	}
 
@@ -196,9 +235,9 @@ public class MainWindow {
 		Label userNameLabel = new Label("User Name:");
 		TextField userNameField = new TextField();
 		Label ipAddressLabel = new Label("IP address/hostname: ");
-		TextField addressField = new TextField();
+		TextField addressField = new TextField("localhost");
 		Label portNumberLabel = new Label("Port: ");
-		TextField portField = new TextField();
+		TextField portField = new TextField("1234");
 
 		grid.add(scenetitle, 0, 0, 2, 1);
 		grid.add(userNameLabel, 0, 2);
@@ -210,17 +249,17 @@ public class MainWindow {
 
 		grid.setGridLinesVisible(false);
 
-		Button buttonConnect = new Button("Connect");
+		Button buttonConfirm = new Button("Connect");
 		HBox hbBtn = new HBox(10);
 		hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
-		hbBtn.getChildren().add(buttonConnect);
+		hbBtn.getChildren().add(buttonConfirm);
 		grid.add(hbBtn, 1, 6);
 
 		final Text actiontarget = new Text();
 		grid.add(actiontarget, 1, 6);		
 		
 				
-		buttonConnect.setOnAction(event -> {
+		buttonConfirm.setOnAction(event -> {
 		
 			username = userNameField.getText();
 			String ip = addressField.getText();
@@ -229,9 +268,12 @@ public class MainWindow {
 			try {
 				socket = new Socket(ip, port);
 				
-				chat.addMessage("Connected!");				
+				this.addMessage("Connected.");				
 				//System.out.println("Connected!"); //todo: delete				
 				
+				buttonConnect.setDisable(true);
+				buttonDisconnect.setDisable(false);
+				connectForm.close();
 				
 				outputStream = socket.getOutputStream();
 				objectOutputStream = new ObjectOutputStream(outputStream);
@@ -239,7 +281,7 @@ public class MainWindow {
 				inputStream = socket.getInputStream();
 				objectInputStream = new ObjectInputStream(inputStream);
 				
-				ServerHandler serverHandler = new ServerHandler(chat, socket, objectInputStream);
+				ServerHandler serverHandler = new ServerHandler(this, socket, objectInputStream);
 				Thread thread = new Thread(serverHandler);				
 				
 				thread.start();
@@ -247,12 +289,11 @@ public class MainWindow {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				
-				chat.addMessage("Unable to connect");
+				this.addMessage("Unable to connect.");
 				//System.out.println("Unable to connect!"); //todo: delete
 			}
 
 		});
 		return grid;
 	}
-	
 }

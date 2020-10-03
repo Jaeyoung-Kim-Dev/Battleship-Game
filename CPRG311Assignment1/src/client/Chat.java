@@ -21,10 +21,13 @@ public class Chat {
 	
 	private ObjectInputStream objectInputStream;
 	
+
 	public Chat (ObjectOutputStream objectOutputStream, ObjectInputStream objectInputStream, String username) {
 		this.objectOutputStream = objectOutputStream;
 		this.objectInputStream = objectInputStream;
 		this.username = username;
+	}
+	public Chat () {		
 	}
 	
 	public Pane chatArea() {
