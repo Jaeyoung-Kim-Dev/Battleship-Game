@@ -15,11 +15,13 @@ import java.net.*;
 public class ServerHandler implements Runnable {
 	private MainWindow mainWindow;
 	
+	private Chat chat;
+	
 	private Socket server;
 	private ObjectInputStream ois;
 	
-	public ServerHandler(MainWindow mainWindow, Socket server, ObjectInputStream ois) {
-		this.mainWindow = mainWindow;
+	public ServerHandler(Chat chat, Socket server, ObjectInputStream ois) {
+		this.chat = chat;
 		this.server = server;
 		this.ois = ois;
 	}
@@ -30,7 +32,7 @@ public class ServerHandler implements Runnable {
 		while (!this.server.isClosed()) {
 			try {
 				Message receive = (Message) this.ois.readObject();
-				this.mainWindow.addMessage(receive.toString());
+				this.chat.addMessage(receive.toString());
 				//this.mainWindow.addMessage("Sending a message from serverhandler");
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block

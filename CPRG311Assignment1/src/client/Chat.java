@@ -16,30 +16,17 @@ import problemdomain.Message;
 public class Chat {
 	
 	private ListView<String> messageList;
-	
+	private String username;
 	private ObjectOutputStream objectOutputStream;
 	
 	private ObjectInputStream objectInputStream;
 	
-	public Chat (ObjectOutputStream objectOutputStream, ObjectInputStream objectInputStream) {
+	public Chat (ObjectOutputStream objectOutputStream, ObjectInputStream objectInputStream, String username) {
 		this.objectOutputStream = objectOutputStream;
 		this.objectInputStream = objectInputStream;
+		this.username = username;
 	}
 	
-		
-
-	public ObjectOutputStream getObjectOutputStream() {
-		return objectOutputStream;
-	}
-
-
-
-	public ObjectInputStream getObjectInputStream() {
-		return objectInputStream;
-	}
-
-
-
 	public Pane chatArea() {
 
 		BorderPane chat = new BorderPane();
@@ -71,8 +58,8 @@ public class Chat {
 			String text = userTextField.getText();
 			
 			// Create a Message object.
-			//Message send = new Message(this.username, text);
-			Message send = new Message("noname", text);
+			Message send = new Message(this.username, text);
+			//Message send = new Message("noname", text);
 			
 			try {
 				// Send Message to the server.

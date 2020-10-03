@@ -31,11 +31,9 @@ import problemdomain.Message;
 
 public class MainWindow {
 
-	//private Chat chat;
-	
 	private Socket socket;
 	
-	///private Chat chat;
+	private Chat chat;
 	
 	private String username;
 	
@@ -50,13 +48,13 @@ public class MainWindow {
 	
 	//private Connection connection;
 	
-	private ListView<String> messageList;
+	//private ListView<String> messageList;
 	
 	public MainWindow() {
+		
 		//this.connection = new Connection(); //objectOutputStream, objectInputStream
 		//this.chat = new Chat(objectOutputStream, objectInputStream);
 		//this.objectOutputStream = chat.getObjectOutputStream();
-		
 	}
 	
 	public Parent base() {
@@ -99,70 +97,60 @@ public class MainWindow {
 		BorderPane connectionBaord = new BorderPane();
 		
 		connectionBaord.setTop(connectionArea());
-		connectionBaord.setCenter(chatArea());
+		this.chat = new Chat(objectOutputStream, objectInputStream, username);
+		connectionBaord.setCenter(chat.chatArea());
 		
 		return connectionBaord;
 	}
 	
-	public Pane chatArea() {
-
-		BorderPane chat = new BorderPane();
-
-		chat.setCenter(chatList());
-		chat.setBottom(typeArea());
-		
-		return chat;
-	}
-
-	public ListView<String> chatList() {
-		
-		messageList = new ListView<String>();
-		
-		return messageList;
-	}
-
-	private Pane typeArea() {
-
-		BorderPane chat = new BorderPane();
-
-		TextField userTextField = new TextField();
-		Button buttonSend = new Button("SEND");
-
-		chat.setCenter(userTextField);
-		chat.setRight(buttonSend);
-
-		buttonSend.setOnAction(event -> {
-			String text = userTextField.getText();
-			
-			// Create a Message object.
-			Message send = new Message(this.username, text);
-			//Message send = new Message("noname", text);
-			
-			try {
-				// Send Message to the server.
-				this.objectOutputStream.writeObject(send);
-				
-				// If it's sent successfully, clear the text field.
-				userTextField.setText("");
-				
-				// If it's sent successfully, add message to chat list.
-				this.addMessage(send.toString());
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				
-				this.addMessage("Unable to send message.");
-			}
-		});
-		
-		return chat;
-	}
-	
-
-	public void addMessage(String message) {
-		this.messageList.getItems().add(message);
-		//this.messageList.getItems().add("msg added");
-	}
+	/*
+	 * public Pane chatArea() {
+	 * 
+	 * BorderPane chat = new BorderPane();
+	 * 
+	 * chat.setCenter(chatList()); chat.setBottom(typeArea());
+	 * 
+	 * return chat; }
+	 * 
+	 * public ListView<String> chatList() {
+	 * 
+	 * messageList = new ListView<String>();
+	 * 
+	 * return messageList; }
+	 * 
+	 * private Pane typeArea() {
+	 * 
+	 * BorderPane chat = new BorderPane();
+	 * 
+	 * TextField userTextField = new TextField(); Button buttonSend = new
+	 * Button("SEND");
+	 * 
+	 * chat.setCenter(userTextField); chat.setRight(buttonSend);
+	 * 
+	 * buttonSend.setOnAction(event -> { String text = userTextField.getText();
+	 * 
+	 * // Create a Message object. Message send = new Message(this.username, text);
+	 * //Message send = new Message("noname", text);
+	 * 
+	 * try { // Send Message to the server.
+	 * this.objectOutputStream.writeObject(send);
+	 * 
+	 * // If it's sent successfully, clear the text field.
+	 * userTextField.setText("");
+	 * 
+	 * // If it's sent successfully, add message to chat list.
+	 * this.addMessage(send.toString()); } catch (IOException e) { // TODO
+	 * Auto-generated catch block e.printStackTrace();
+	 * 
+	 * this.addMessage("Unable to send message."); } });
+	 * 
+	 * return chat; }
+	 * 
+	 * 
+	 * public void addMessage(String message) {
+	 * this.messageList.getItems().add(message);
+	 * //this.messageList.getItems().add("msg added"); }
+	 */
 	
 	public HBox connectionArea() {
 
@@ -241,7 +229,7 @@ public class MainWindow {
 			try {
 				socket = new Socket(ip, port);
 				
-				this.addMessage("Connected!");				
+				chat.addMessage("Connected!");				
 				//System.out.println("Connected!"); //todo: delete				
 				
 				
@@ -251,7 +239,7 @@ public class MainWindow {
 				inputStream = socket.getInputStream();
 				objectInputStream = new ObjectInputStream(inputStream);
 				
-				ServerHandler serverHandler = new ServerHandler(this, socket, objectInputStream);
+				ServerHandler serverHandler = new ServerHandler(chat, socket, objectInputStream);
 				Thread thread = new Thread(serverHandler);				
 				
 				thread.start();
@@ -259,7 +247,7 @@ public class MainWindow {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				
-				this.addMessage("Unable to connect");
+				chat.addMessage("Unable to connect");
 				//System.out.println("Unable to connect!"); //todo: delete
 			}
 
