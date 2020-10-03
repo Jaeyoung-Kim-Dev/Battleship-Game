@@ -24,12 +24,12 @@ public class InputOutputHandler implements Runnable {
 	public void run() {
 		while (!this.input.getSocket().isClosed() && !this.output.getSocket().isClosed()) {
 			try {
-				Message message1 = (Message) this.input.getOis().readObject();
+				Message message = (Message) this.input.getOis().readObject();
 				
-				System.out.println("Received message: " + message1.toString());
+				System.out.println("Received message: " + message.toString());
 				
 				//Message send = new Message("Server", "Okay!");
-				this.output.getOos().writeObject(message1);
+				this.output.getOos().writeObject(message);
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
