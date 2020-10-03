@@ -30,7 +30,8 @@ public class ServerHandler implements Runnable {
 		while (!this.server.isClosed()) {
 			try {
 				Message receive = (Message) this.ois.readObject();
-				this.chat.addMessage(receive.toString());
+				//this.chat.addMessage(receive.toString());
+				this.chat.addMessage("Sending a message from serverhandler");
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

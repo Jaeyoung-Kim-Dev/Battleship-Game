@@ -31,9 +31,20 @@ public class Connection {
 	
 	private Chat chat;
 	
+	private OutputStream outputStream;
+	
 	private ObjectOutputStream objectOutputStream;
 
+	private InputStream inputStream;
+	
 	private ObjectInputStream objectInputStream;
+	
+	
+	public Connection(Chat chat, ObjectOutputStream objectOutputStream, ObjectInputStream objectInputStream) {
+		this.chat = chat;
+		this.objectOutputStream = objectOutputStream;
+		this.objectInputStream = objectInputStream;
+	}
 	
 	public HBox connectionArea() {
 
@@ -49,7 +60,7 @@ public class Connection {
 		Button buttonDisconnect = new Button("Disconnect");
 		buttonDisconnect.setPrefSize(150, 40);
 		hbox.getChildren().addAll(buttonConnect, buttonDisconnect);
-
+		
 		buttonConnect.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -100,7 +111,7 @@ public class Connection {
 		grid.add(hbBtn, 1, 6);
 
 		final Text actiontarget = new Text();
-		grid.add(actiontarget, 1, 6);
+		grid.add(actiontarget, 1, 6);		
 		
 				
 		buttonConnect.setOnAction(event -> {
@@ -112,17 +123,16 @@ public class Connection {
 			try {
 				socket = new Socket(ip, port);
 				
-				//chat.addMessage("Connected!");
-				System.out.println("C!");
+				chat.addMessage("Connected!");				
 				
-				OutputStream outputStream = socket.getOutputStream();
+				outputStream = socket.getOutputStream();
 				objectOutputStream = new ObjectOutputStream(outputStream);
 				
-				InputStream inputStream = socket.getInputStream();
+				inputStream = socket.getInputStream();
 				objectInputStream = new ObjectInputStream(inputStream);
 				
 				ServerHandler serverHandler = new ServerHandler(chat, socket, objectInputStream);
-				Thread thread = new Thread(serverHandler);
+				Thread thread = new Thread(serverHandler);				
 				
 				thread.start();
 			} catch (IOException e) {

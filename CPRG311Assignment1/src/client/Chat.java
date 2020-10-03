@@ -1,6 +1,7 @@
 package client;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import javafx.collections.FXCollections;
@@ -18,6 +19,25 @@ public class Chat {
 	
 	private ObjectOutputStream objectOutputStream;
 	
+	private ObjectInputStream objectInputStream;
+	
+	public Chat () {		
+	}
+	
+		
+
+	public ObjectOutputStream getObjectOutputStream() {
+		return objectOutputStream;
+	}
+
+
+
+	public ObjectInputStream getObjectInputStream() {
+		return objectInputStream;
+	}
+
+
+
 	public Pane chatArea() {
 
 		BorderPane chat = new BorderPane();
@@ -32,11 +52,6 @@ public class Chat {
 		
 		messageList = new ListView<String>();
 		
-		for(int i=0; i < 100; i++) {
-			messageList.getItems().add(Integer.toString(i));	
-		}
-				
-
 		return messageList;
 	}
 
@@ -79,7 +94,7 @@ public class Chat {
 	
 
 	public void addMessage(String message) {
-		//this.messageList.getItems().add(message);
-		this.messageList.getItems().add("msg added");
+		this.messageList.getItems().add(message);
+		//this.messageList.getItems().add("msg added");
 	}
 }

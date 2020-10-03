@@ -29,7 +29,7 @@ import javafx.stage.Stage;
 
 
 
-public class Main2 extends Application {
+public class GitSample extends Application {
 	
 	private static final int TILE_SIZE = 40;
     private static final int MAP_WIDTH = 400;
@@ -242,7 +242,7 @@ public class Main2 extends Application {
 		chartTitle.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		grid.add(chartTitle, 2, 0);
 
-		ImageView imageHouse = new ImageView(new Image(Main2.class.getResourceAsStream("home.gif")));
+		ImageView imageHouse = new ImageView(new Image(GitSample.class.getResourceAsStream("home.gif")));
 		grid.add(imageHouse, 0, 0, 1, 2);
 
 		return grid;

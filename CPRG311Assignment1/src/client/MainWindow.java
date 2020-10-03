@@ -1,11 +1,28 @@
 package client;
 
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 
 public class MainWindow {
 
+	private Chat chat;
+	
+	private ObjectOutputStream objectOutputStream;
+
+	private ObjectInputStream objectInputStream;
+	
+	private Connection connection;
+	
+	public MainWindow() {
+		this.chat = new Chat();
+		this.objectOutputStream = chat.getObjectOutputStream();
+		this.connection = new Connection(chat, objectOutputStream, objectInputStream);
+	}
+	
 	public Parent base() {
 		
 		BorderPane root = new BorderPane();
@@ -43,14 +60,11 @@ public class MainWindow {
 	
 	public Pane connect() {
 		
-		BorderPane gameBaord = new BorderPane();
+		BorderPane connectionBaord = new BorderPane();
 		
-		Connection connection = new Connection();
-		Chat chat = new Chat();
+		connectionBaord.setTop(connection.connectionArea());
+		connectionBaord.setCenter(chat.chatArea());
 		
-		gameBaord.setTop(connection.connectionArea());
-		gameBaord.setCenter(chat.chatArea());
-		
-		return gameBaord;
+		return connectionBaord;
 	}
 }
