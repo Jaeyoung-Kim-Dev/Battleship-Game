@@ -140,10 +140,10 @@ public class Connection {
 				inputStream = socket.getInputStream();
 				objectInputStream = new ObjectInputStream(inputStream);
 				
-				ServerHandler serverHandler = new ServerHandler(chat, socket, objectInputStream);
-				Thread thread = new Thread(serverHandler);				
+				//ServerHandler serverHandler = new ServerHandler(chat, socket, objectInputStream);
+				//Thread thread = new Thread(serverHandler);				
 				
-				thread.start();
+				//thread.start();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
