@@ -21,7 +21,9 @@ public class Chat {
 	
 	private ObjectInputStream objectInputStream;
 	
-	public Chat () {		
+	public Chat (ObjectOutputStream objectOutputStream, ObjectInputStream objectInputStream) {
+		this.objectOutputStream = objectOutputStream;
+		this.objectInputStream = objectInputStream;
 	}
 	
 		
