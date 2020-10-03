@@ -6,4 +6,19 @@
 			<item value="org.eclipse.fx.ide"/>
 		</list>
 	</section>
+	<section name="ExternalProjectImportWizard">
+		<item key="WizardProjectsImportPage.STORE_NESTED_PROJECTS" value="false"/>
+		<item key="WizardProjectsImportPage.STORE_COPY_PROJECT_ID" value="false"/>
+		<item key="WizardProjectsImportPage.STORE_ARCHIVE_SELECTED" value="false"/>
+		<item key="WizardProjectsImportPage.STORE_CLOSE_CREATED_PROJECTS_ID" value="false"/>
+		<item key="WizardProjectsImportPage.STORE_HIDE_CONFLICTING_PROJECTS_ID" value="false"/>
+		<list key="WizardProjectsImportPage.STORE_DIRECTORIES">
+			<item value="C:\Users\kornk\GitHub\cprg311\M03-ExerciseAA-Version-B"/>
+			<item value="C:\Users\kornk\OneDrive\Documents\Development\Java\eclipse-workspace\Assignment4"/>
+			<item value="C:\Users\kornk\OneDrive\Documents\0.SAIT\2nd semester\Java - Obj.-Oriented Prog. Essentials (CPRG-251-C)\Assignment\3\CPRG251A3Skeleton"/>
+		</list>
+		<list key="WizardProjectsImportPage.STORE_ARCHIVES">
+			<item value=""/>
+		</list>
+	</section>
 </section>
