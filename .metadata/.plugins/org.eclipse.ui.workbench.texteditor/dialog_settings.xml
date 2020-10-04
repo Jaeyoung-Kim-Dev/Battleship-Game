@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="ServerHan"/>
+		<item key="selection" value="random"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="random"/>
+			<item value="strike"/>
+			<item value="reset"/>
+			<item value="objectOutputStream.reset();"/>
+			<item value="outputst"/>
 			<item value="serverhan"/>
 			<item value="ServerHan"/>
 			<item value="message"/>
@@ -18,11 +23,6 @@
 			<item value="noname"/>
 			<item value="connected"/>
 			<item value="tab"/>
-			<item value="TAB"/>
-			<item value="Tab"/>
-			<item value="start"/>
-			<item value="MinesweeperApp"/>
-			<item value="main"/>
 		</list>
 		<list key="replacehistory">
 		</list>

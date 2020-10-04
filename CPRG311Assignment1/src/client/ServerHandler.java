@@ -3,6 +3,7 @@
  */
 package client;
 
+import problemdomain.AfterAttack;
 import problemdomain.Battle;
 import problemdomain.Message;
 
@@ -36,6 +37,11 @@ public class ServerHandler implements Runnable {
 				} else if (receive instanceof Battle) {
 					Battle battle = (Battle) receive;
 					this.mainWindow.addMessage(battle.toString());
+					this.mainWindow.gotAttacked(battle.getX(),battle.getY());
+				} else if (receive instanceof AfterAttack) {
+					AfterAttack afterAttack = (AfterAttack) receive;
+					this.mainWindow.addMessage(afterAttack.toString());
+					this.mainWindow.attacked(afterAttack.getX(),afterAttack.getY(), afterAttack.isStrike());
 				}
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();

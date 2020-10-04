@@ -32,6 +32,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import problemdomain.AfterAttack;
 import problemdomain.Battle;
 import problemdomain.Message;
 
@@ -62,6 +63,8 @@ public class MainWindow {
 
 	private ListView<String> messageList;
 
+	private boolean myTurn = true;
+
 	private static final int TILE_SIZE = 40;
 	private static final int MAP_WIDTH = 400;
 	private static final int MAP_HEIGHT = 400;
@@ -69,14 +72,20 @@ public class MainWindow {
 	private static final int X_TILES = MAP_WIDTH / TILE_SIZE;
 	private static final int Y_TILES = MAP_HEIGHT / TILE_SIZE;
 
-	public MyTile[][] myGrid = new MyTile[X_TILES][Y_TILES];
+	private MyTile[][] myGrid;// = new MyTile[X_TILES][Y_TILES];
 	private EnemyTile[][] enemyGrid = new EnemyTile[X_TILES][Y_TILES];
 
 	public MainWindow() {
+		myGrid = new MyTile[X_TILES][Y_TILES];
+
 		// this.connection = new Connection(); //objectOutputStream, objectInputStream
 		// this.chat = new Chat(objectOutputStream, objectInputStream);
 		// this.objectOutputStream = chat.getObjectOutputStream();
 
+	}
+
+	public void setMyGrid(MyTile[][] myGrid) {
+		this.myGrid = myGrid;
 	}
 
 	public Parent base() {
@@ -93,9 +102,7 @@ public class MainWindow {
 
 		BorderPane gameBaord = new BorderPane();
 
-		Status status = new Status();
-
-		gameBaord.setTop(status.statusArea());
+		gameBaord.setTop(statusArea());
 		gameBaord.setCenter(gameMap());
 
 		return gameBaord;
@@ -132,54 +139,6 @@ public class MainWindow {
 		chat.setBottom(typeArea());
 
 		return chat;
-	}
-
-	public ListView<String> chatList() {
-
-		messageList = new ListView<String>();
-
-		return messageList;
-	}
-
-	private Pane typeArea() {
-
-		BorderPane chat = new BorderPane();
-
-		TextField userTextField = new TextField();
-		Button buttonSend = new Button("SEND");
-
-		chat.setCenter(userTextField);
-		chat.setRight(buttonSend);
-
-		buttonSend.setOnAction(event -> {
-			String text = userTextField.getText();
-
-			// Create a Message object.
-			Message send = new Message(this.username, text);
-
-			try {
-				// Send Message to the server.
-				objectOutputStream.writeObject(send);
-				objectOutputStream.reset(); // TODO: necessary?
-
-				// If it's sent successfully, clear the text field.
-				userTextField.setText("");
-
-				// If it's sent successfully, add message to chat list.
-				addMessage(send.toString());
-			} catch (IOException e) {			
-				e.printStackTrace();
-				addMessage("Unable to send message.");
-			}
-
-		});
-
-		return chat;
-	}
-
-	public void addMessage(String message) {
-		this.messageList.getItems().add(message);
-		// this.messageList.getItems().add("msg added");
 	}
 
 	public HBox connectionArea() {
@@ -310,9 +269,83 @@ public class MainWindow {
 		return grid;
 	}
 
+	public ListView<String> chatList() {
+
+		messageList = new ListView<String>();
+
+		return messageList;
+	}
+
+	private Pane typeArea() {
+
+		BorderPane chat = new BorderPane();
+
+		TextField userTextField = new TextField();
+		Button buttonSend = new Button("SEND");
+
+		chat.setCenter(userTextField);
+		chat.setRight(buttonSend);
+
+		buttonSend.setOnAction(event -> {
+			String text = userTextField.getText();
+
+			// Create a Message object.
+			Message send = new Message(this.username, text);
+
+			try {
+				// Send Message to the server.
+				objectOutputStream.writeObject(send);
+				objectOutputStream.reset(); // TODO: necessary?
+
+				// If it's sent successfully, clear the text field.
+				userTextField.setText("");
+
+				// If it's sent successfully, add message to chat list.
+				addMessage(send.toString());
+			} catch (IOException e) {
+				e.printStackTrace();
+				addMessage("Unable to send message.");
+			}
+
+		});
+
+		return chat;
+	}
+
+	public void addMessage(String message) {
+		this.messageList.getItems().add(message);
+		// this.messageList.getItems().add("msg added");
+	}
+
+	public Pane statusArea() {
+
+		BorderPane status = new BorderPane();
+		status.setPadding(new Insets(50, 50, 15, 15));
+		status.setStyle("-fx-background-color: #336699;");
+
+		Text text = new Text("Status Bar is coming soon...");
+
+		status.setCenter(text);
+
+		return status;
+	}
+
 	// MyMap part begins
 
 	public Pane createMyMap() {
+		boolean shipPlaced = false;
+		boolean vertical = true;
+		boolean alreadyStrike = false;
+		int start_x = 0;
+		int start_y = 0;
+		int shipSize = 0;
+
+		final int aircraftCarrier = 5;
+		final int battleship = 4;
+		final int cruiser = 3;
+		final int submarine = 3;
+		final int destroyer = 2;
+
 		BorderPane root = new BorderPane();
 		root.setPadding(new Insets(15, 15, 15, 15));
 		root.setStyle("-fx-background-color: #336699;");
@@ -329,26 +362,81 @@ public class MainWindow {
 			}
 		}
 
-		// todo: to be deleted. just testing strikes
-		for (int x = 0; x < 5; x++) { // Aircraft carrier occupies 5 squares
-			myGrid[x][0].strike = true;
-		}
-		for (int x = 0; x < 4; x++) { // Battleship occupies 4 squares
-			myGrid[x][1].strike = true;
-		}
-		for (int x = 0; x < 3; x++) { // Cruiser occupies 3 squares
-			myGrid[x][2].strike = true;
-		}
-		for (int x = 0; x < 3; x++) { // Submarine occupies 3 squares
-			myGrid[x][3].strike = true;
-		}
-		for (int x = 0; x < 2; x++) { // Destroyer occupies 2 squares
-			myGrid[x][4].strike = true;
+		while (!shipPlaced) {
+			shipSize = aircraftCarrier;
+			shipPlaced = false;
+			vertical = (((int) (Math.random() * 100)) % 2 == 0) ? true : false;
+			start_x = randomNumber(0, 10 - shipSize);
+			start_y = randomNumber(0, 10 - shipSize);
+
+			if (vertical) {
+				for (int i = 0; i < shipSize; i++) {
+					myGrid[start_x + i][start_y].strike = true;
+					myGrid[start_x + i][start_y].border.setFill(Color.YELLOW);
+				}
+			} else {
+				for (int i = 0; i < shipSize; i++) {
+					myGrid[start_x][start_y + i].strike = true;
+					myGrid[start_x][start_y + i].border.setFill(Color.YELLOW);
+				}
+			}
+			shipPlaced = true;
 		}
 
-		root.setCenter(titles);
+		while (!shipPlaced) {
+			shipSize = aircraftCarrier;
+			shipPlaced = false;
+			vertical = (((int) (Math.random() * 100)) % 2 == 0) ? true : false;
+			start_x = randomNumber(0, 10 - shipSize);
+			start_y = randomNumber(0, 10 - shipSize);
+			
+			
+			if (vertical) { //여기서 무결섬 검사를 한번 하고
+				for (int i = 0; i < shipSize; i++) {
+					if (myGrid[start_x + i][start_y].strike) break;
+				}
+			} else {
+				for (int i = 0; i < shipSize; i++) {
+					alreadyStrike = myGrid[start_x][start_y + i].strike ? ;
+						
+					// 그 다음 여기서 문제가 없으면 배를 배치
+						myGrid[start_x + i][start_y].strike = true;
+						myGrid[start_x + i][start_y].border.setFill(Color.YELLOW);
+						shipPlaced = true;
+					
+				}
+			} else {
+				for (int i = 0; i < shipSize; i++) {
+					myGrid[start_x][start_y + i].strike = true;
+					myGrid[start_x][start_y + i].border.setFill(Color.YELLOW);
+				}
+			}
+			shipPlaced = true;
+		}
 
-		return root;
+	// todo: to be deleted. just testing strikes
+	/*
+	 * for (int x = 0; x < 5; x++) { // Aircraft carrier occupies 5 squares
+	 * myGrid[x][0].strike = true; myGrid[x][0].border.setFill(Color.YELLOW); } for
+	 * (int x = 0; x < 4; x++) { // Battleship occupies 4 squares
+	 * myGrid[x][1].strike = true; myGrid[x][1].border.setFill(Color.YELLOW); } for
+	 * (int x = 0; x < 3; x++) { // Cruiser occupies 3 squares myGrid[x][2].strike =
+	 * true; myGrid[x][2].border.setFill(Color.YELLOW); } for (int x = 0; x < 3;
+	 * x++) { // Submarine occupies 3 squares myGrid[x][3].strike = true;
+	 * myGrid[x][3].border.setFill(Color.YELLOW); } for (int x = 0; x < 2; x++) { //
+	 * Destroyer occupies 2 squares myGrid[x][4].strike = true;
+	 * myGrid[x][4].border.setFill(Color.YELLOW); }
+	 */
+
+	root.setCenter(titles);
+
+	return root;
+
+	}
+
+	public int randomNumber(int min, int max) {
+		int range = (max - min) + 1;
+		return (int) (Math.random() * range) + min;
 	}
 
 	public class MyTile extends StackPane {
@@ -364,10 +452,6 @@ public class MainWindow {
 			this.y = y;
 
 			border.setStroke(Color.LIGHTGRAY);
-
-			text.setFont(Font.font(18));
-			text.setText(strike ? "O" : "");
-			text.setVisible(false);
 
 			getChildren().addAll(border, text);
 
@@ -417,23 +501,6 @@ public class MainWindow {
 			}
 		}
 
-		// todo: to be deleted. just testing strikes
-		for (int x = 0; x < 5; x++) { // Aircraft carrier occupies 5 squares
-			enemyGrid[x][0].strike = true;
-		}
-		for (int x = 0; x < 4; x++) { // Battleship occupies 4 squares
-			enemyGrid[x][1].strike = true;
-		}
-		for (int x = 0; x < 3; x++) { // Cruiser occupies 3 squares
-			enemyGrid[x][2].strike = true;
-		}
-		for (int x = 0; x < 3; x++) { // Submarine occupies 3 squares
-			enemyGrid[x][3].strike = true;
-		}
-		for (int x = 0; x < 2; x++) { // Destroyer occupies 2 squares
-			enemyGrid[x][4].strike = true;
-		}
-
 		root.setCenter(titles);
 
 		return root;
@@ -453,10 +520,6 @@ public class MainWindow {
 
 			border.setStroke(Color.LIGHTGRAY);
 
-			text.setFont(Font.font(18));
-			text.setText(strike ? "O" : "");
-			text.setVisible(false);
-
 			getChildren().addAll(border, text);
 
 			setTranslateX(this.x * TILE_SIZE);
@@ -466,33 +529,64 @@ public class MainWindow {
 		}
 
 		public void open() {
-			if (isOpen)
+			if (isOpen || !myTurn) // return immediately if it's already open or not my turn.
 				return;
+
+			Battle battle = new Battle(username, x, y);
+
+			try {
+				// Send Message to the server.
+				objectOutputStream.writeObject(battle);
+				objectOutputStream.reset(); // TODO: necessary?
+				// If it's sent successfully, add message to chat list.
+				addMessage(battle.toString());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+
+				addMessage("Unable to attack.");
+			}
 
 			if (strike) {
 				border.setFill(Color.RED);
-
 				// Create a Message object.
-				Battle battle = new Battle(username, x, y);
-
-				try {
-					// Send Message to the server.
-					objectOutputStream.writeObject(battle);
-					objectOutputStream.reset(); // TODO: necessary?
-					// If it's sent successfully, add message to chat list.
-					addMessage(battle.toString());
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-
-					addMessage("Unable to send message.");
-				}
-				return;
+			} else {
+				border.setFill(null);
 			}
 
 			isOpen = true;
-			text.setVisible(true);
-			border.setFill(null);
+			myTurn = false;
+		}
+	}
+
+	public void gotAttacked(int x, int y) {
+		boolean _strike = myGrid[x][y].strike;
+		if (_strike) {
+			addMessage("You got attacked!");
+			myGrid[x][y].border.setFill(Color.RED);
+		} else {
+			addMessage("Missed!");
+			myGrid[x][y].border.setFill(null);
+		}
+		AfterAttack afterAttack = new AfterAttack(username, x, y, _strike);
+
+		try {
+			objectOutputStream.writeObject(afterAttack);
+			objectOutputStream.reset(); // TODO: necessary?
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		myTurn = true;
+	}
+
+	public void attacked(int x, int y, boolean strike) {
+		if (strike) {
+			addMessage("Success!");
+			enemyGrid[x][y].border.setFill(Color.RED);
+		} else {
+			addMessage("Missed!");
+			enemyGrid[x][y].border.setFill(null);
 		}
 	}
 }

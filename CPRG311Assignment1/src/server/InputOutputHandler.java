@@ -34,11 +34,14 @@ public class InputOutputHandler implements Runnable {
 					Battle battle = (Battle) receive;
 					System.out.println("Received message: " + battle.toString());
 					this.output.getOos().writeObject(battle);
+				} else if (receive instanceof AfterAttack) {
+					AfterAttack afterAttack = (AfterAttack) receive;
+					System.out.println("Received message: " + afterAttack.toString());
+					this.output.getOos().writeObject(afterAttack);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
