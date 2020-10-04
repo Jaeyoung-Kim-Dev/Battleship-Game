@@ -22,4 +22,5 @@
 <fullyQualifiedTypeName name="javafx.scene.text.Text"/>
 <fullyQualifiedTypeName name="javafx.scene.Scene"/>
 <fullyQualifiedTypeName name="javafx.stage.Modality"/>
+<fullyQualifiedTypeName name="problemdomain.Battle"/>
 </qualifiedTypeNameHistroy>

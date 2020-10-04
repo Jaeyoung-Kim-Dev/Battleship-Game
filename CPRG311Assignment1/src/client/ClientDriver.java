@@ -1,6 +1,5 @@
-package application;
+package client;
 
-import client.MainWindow;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -11,7 +10,7 @@ import javafx.stage.Stage;
  * @author Jaeyoung Kim
  * @version 1.0, Sep 30, 2020
  */
-public class AppDriver extends Application  {
+public class ClientDriver extends Application  {
 
 	public static void main(String[] args) {		
 		launch(args);
