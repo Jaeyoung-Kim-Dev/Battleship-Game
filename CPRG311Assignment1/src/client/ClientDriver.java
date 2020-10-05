@@ -22,7 +22,7 @@ public class ClientDriver extends Application  {
 		MainWindow mainWindow= new MainWindow();
 		
 		Scene scene = new Scene(mainWindow.base());
-		
+		scene.getStylesheets().add(MainWindow.class.getResource("ClientDriver.css").toExternalForm());
 		primaryStage.setTitle("Battleship Game");
 		primaryStage.setScene(scene);
 		primaryStage.show();
