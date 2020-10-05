@@ -38,11 +38,7 @@ import problemdomain.Message;
 
 public class MainWindow {
 
-	// private Chat chat;
-
 	private Socket socket;
-
-	/// private Chat chat;
 
 	private String username;
 
@@ -57,11 +53,12 @@ public class MainWindow {
 	private Button buttonConnect;
 
 	private Button buttonDisconnect;
-	// private Connection connection;
 
 	private Stage connectForm;
 
 	private ListView<String> messageList;
+
+	int totalships = 0;	// to calculate all ships on maps
 
 	private boolean myTurn = true;
 
@@ -72,6 +69,13 @@ public class MainWindow {
 	private static final int X_TILES = MAP_WIDTH / TILE_SIZE;
 	private static final int Y_TILES = MAP_HEIGHT / TILE_SIZE;
 
+	private static final int AIRCRAFTCARRIER = 5;
+	private static final int BATTLESHIP= 4;
+	private static final int CRUISER = 3;
+	private static final int SUBMARINE = 3;
+	private static final int DESTROYER = 2;
+
+	
 	private MyTile[][] myGrid;// = new MyTile[X_TILES][Y_TILES];
 	private EnemyTile[][] enemyGrid = new EnemyTile[X_TILES][Y_TILES];
 
@@ -91,7 +95,7 @@ public class MainWindow {
 	public Parent base() {
 
 		BorderPane root = new BorderPane();
-		root.setStyle("-fx-background-color: #336699;");
+		//root.setStyle("-fx-background-color: #336699;");
 		root.setCenter(createGame());
 		root.setRight(connect());
 
@@ -146,7 +150,7 @@ public class MainWindow {
 		HBox hbox = new HBox();
 		hbox.setPadding(new Insets(15, 15, 15, 15));
 		hbox.setSpacing(30);
-		hbox.setStyle("-fx-background-color: #336699;");
+		//hbox.setStyle("-fx-background-color: #336699;");
 		hbox.setAlignment(Pos.CENTER);
 
 		buttonConnect = new Button("Connect");
@@ -321,11 +325,25 @@ public class MainWindow {
 
 		BorderPane status = new BorderPane();
 		status.setPadding(new Insets(50, 50, 15, 15));
-		status.setStyle("-fx-background-color: #336699;");
+		//status.setStyle("-fx-background-color: #336699;");
 
-		Text text = new Text("Status Bar is coming soon...");
+		BorderPane myBoard = new BorderPane();
+		BorderPane enemyBoard = new BorderPane();
 
-		status.setCenter(text);
+		Text myBoardTitle = new Text("My Board");
+		Text enemyBoardTitle = new Text("Enemy's Board");
+
+		myBoard.setPadding(new Insets(15, 15, 15, 15));
+		//myBoard.setStyle("-fx-background-color: #336699;");
+		myBoard.setPrefSize(MAP_WIDTH + 30, 50);
+
+		myBoard.setTop(myBoardTitle);
+		enemyBoard.setTop(enemyBoardTitle);
+
+		status.setLeft(myBoard);
+		status.setRight(enemyBoard);
+
+		// status.setCenter(text);
 
 		return status;
 	}
@@ -333,22 +351,11 @@ public class MainWindow {
 	// MyMap part begins
 
 	public Pane createMyMap() {
-		boolean shipPlaced = false;
-		boolean vertical = true;
-		boolean alreadyStrike = false;
-		int start_x = 0;
-		int start_y = 0;
-		int shipSize = 0;
-
-		final int aircraftCarrier = 5;
-		final int battleship = 4;
-		final int cruiser = 3;
-		final int submarine = 3;
-		final int destroyer = 2;
+		int[] ships = { AIRCRAFTCARRIER, BATTLESHIP, CRUISER, SUBMARINE, DESTROYER };
 
 		BorderPane root = new BorderPane();
 		root.setPadding(new Insets(15, 15, 15, 15));
-		root.setStyle("-fx-background-color: #336699;");
+		//root.setStyle("-fx-background-color: #336699;");
 		root.setPrefSize(MAP_WIDTH + 30, MAP_HEIGHT + 30);
 
 		Pane titles = new Pane();
@@ -361,77 +368,63 @@ public class MainWindow {
 				titles.getChildren().add(tile);
 			}
 		}
+		
+		for (int ship : ships) {
+			randomPlaceShip(ship);	// randomly place ships(array) on my map
+			totalships += ship;		// to calculate all ships on maps
+		}
+
+		root.setCenter(titles);
+
+		return root;
+
+	}
+
+	public void randomPlaceShip(int ship) {
+		boolean shipPlaced = false;
+		boolean vertical = true;
+		boolean alreadyExist = false;
+		int start_x = 0;
+		int start_y = 0;
+		int shipSize = 0;
 
 		while (!shipPlaced) {
-			shipSize = aircraftCarrier;
+			shipSize = ship;
 			shipPlaced = false;
-			vertical = (((int) (Math.random() * 100)) % 2 == 0) ? true : false;
+			alreadyExist = false;
+			vertical = (((int) (Math.random() * 100)) % 2 == 0) ? true : false; // vertical or horizontal for ship
+																				// position
 			start_x = randomNumber(0, 10 - shipSize);
 			start_y = randomNumber(0, 10 - shipSize);
 
+			// validate the other ship is placed in the title.
 			if (vertical) {
+				for (int i = 0; i < shipSize; i++) {
+					if (myGrid[start_x + i][start_y].strike)
+						alreadyExist = true;
+				}
+			} else {
+				for (int i = 0; i < shipSize; i++) {
+					if (myGrid[start_x][start_y + i].strike)
+						alreadyExist = true;
+				}
+			}
+
+			// validate the other ship is placed in the title.
+			if (!alreadyExist && vertical) {
 				for (int i = 0; i < shipSize; i++) {
 					myGrid[start_x + i][start_y].strike = true;
 					myGrid[start_x + i][start_y].border.setFill(Color.YELLOW);
 				}
-			} else {
+				shipPlaced = true;
+			} else if ((!alreadyExist && !vertical)) {
 				for (int i = 0; i < shipSize; i++) {
 					myGrid[start_x][start_y + i].strike = true;
 					myGrid[start_x][start_y + i].border.setFill(Color.YELLOW);
 				}
+				shipPlaced = true;
 			}
-			shipPlaced = true;
 		}
-
-		while (!shipPlaced) {
-			shipSize = aircraftCarrier;
-			shipPlaced = false;
-			vertical = (((int) (Math.random() * 100)) % 2 == 0) ? true : false;
-			start_x = randomNumber(0, 10 - shipSize);
-			start_y = randomNumber(0, 10 - shipSize);
-			
-			
-			if (vertical) { //여기서 무결섬 검사를 한번 하고
-				for (int i = 0; i < shipSize; i++) {
-					if (myGrid[start_x + i][start_y].strike) break;
-				}
-			} else {
-				for (int i = 0; i < shipSize; i++) {
-					alreadyStrike = myGrid[start_x][start_y + i].strike ? ;
-						
-					// 그 다음 여기서 문제가 없으면 배를 배치
-						myGrid[start_x + i][start_y].strike = true;
-						myGrid[start_x + i][start_y].border.setFill(Color.YELLOW);
-						shipPlaced = true;
-					
-				}
-			} else {
-				for (int i = 0; i < shipSize; i++) {
-					myGrid[start_x][start_y + i].strike = true;
-					myGrid[start_x][start_y + i].border.setFill(Color.YELLOW);
-				}
-			}
-			shipPlaced = true;
-		}
-
-	// todo: to be deleted. just testing strikes
-	/*
-	 * for (int x = 0; x < 5; x++) { // Aircraft carrier occupies 5 squares
-	 * myGrid[x][0].strike = true; myGrid[x][0].border.setFill(Color.YELLOW); } for
-	 * (int x = 0; x < 4; x++) { // Battleship occupies 4 squares
-	 * myGrid[x][1].strike = true; myGrid[x][1].border.setFill(Color.YELLOW); } for
-	 * (int x = 0; x < 3; x++) { // Cruiser occupies 3 squares myGrid[x][2].strike =
-	 * true; myGrid[x][2].border.setFill(Color.YELLOW); } for (int x = 0; x < 3;
-	 * x++) { // Submarine occupies 3 squares myGrid[x][3].strike = true;
-	 * myGrid[x][3].border.setFill(Color.YELLOW); } for (int x = 0; x < 2; x++) { //
-	 * Destroyer occupies 2 squares myGrid[x][4].strike = true;
-	 * myGrid[x][4].border.setFill(Color.YELLOW); }
-	 */
-
-	root.setCenter(titles);
-
-	return root;
-
 	}
 
 	public int randomNumber(int min, int max) {
@@ -487,7 +480,7 @@ public class MainWindow {
 	public Pane createEnemyMap() {
 		BorderPane root = new BorderPane();
 		root.setPadding(new Insets(15, 15, 15, 15));
-		root.setStyle("-fx-background-color: #336699;");
+		//root.setStyle("-fx-background-color: #336699;");
 		root.setPrefSize(MAP_WIDTH + 30, MAP_HEIGHT + 30);
 
 		Pane titles = new Pane();

@@ -1,0 +1,49 @@
+.root {
+	-fx-background-image: url("background.jpg");
+	-fx-background-size: cover;
+}
+
+.label {
+	-fx-font-size: 12px;
+	-fx-font-weight: bold;
+	-fx-text-fill: #0E1D33;
+}
+
+.button {
+	-fx-text-fill: white;
+	-fx-font-weight: bold;
+	-fx-font-size: large;
+	-fx-background-color: linear-gradient(#343a40, #343a10);
+	
+}
+
+.list-view {
+	-fx-background-color: #343a40;
+	-fx-background-insets: 0;
+	-fx-padding: 8;
+}
+
+.list-view .list-cell:even {
+	-fx-background-color: #343a40;
+	-fx-text-fill: white;
+}
+
+.list-view .list-cell:odd {
+	-fx-background-color: #343a35;
+	-fx-text-fill: white;
+}
+
+.text-field {
+	-fx-background-color: #343a40;
+	-fx-text-fill: white;
+	-fx-background-insets: 0;
+	-fx-padding: 8;
+	 -fx-text-box-border: red ;
+  -fx-focus-color: red ;
+	
+}
+
+.text-field.error {
+  -fx-text-box-border: red ;
+  -fx-focus-color: red ;
+}
