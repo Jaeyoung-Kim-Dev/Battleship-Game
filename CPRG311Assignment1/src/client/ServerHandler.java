@@ -6,6 +6,7 @@ package client;
 import problemdomain.AfterAttack;
 import problemdomain.Battle;
 import problemdomain.Message;
+import problemdomain.StartGame;
 
 import java.io.*;
 import java.net.*;
@@ -31,16 +32,18 @@ public class ServerHandler implements Runnable {
 		while (!this.server.isClosed()) {
 			try {
 				Object receive = (Object) this.ois.readObject();
-				if (receive instanceof Message) {
+				if (receive instanceof StartGame) {
+					StartGame startGame = (StartGame) receive;
+					this.mainWindow.addMessage(startGame.toString());
+					this.mainWindow.startGame(((StartGame) receive).isGoFirst());					
+				} else if (receive instanceof Message) {
 					receive = (Message) receive;
 					this.mainWindow.addMessage(receive.toString());
 				} else if (receive instanceof Battle) {
-					Battle battle = (Battle) receive;
-					this.mainWindow.addMessage(battle.toString());
+					Battle battle = (Battle) receive;					
 					this.mainWindow.gotAttacked(battle.getX(),battle.getY());
 				} else if (receive instanceof AfterAttack) {
-					AfterAttack afterAttack = (AfterAttack) receive;
-					this.mainWindow.addMessage(afterAttack.toString());
+					AfterAttack afterAttack = (AfterAttack) receive;					
 					this.mainWindow.attacked(afterAttack.getX(),afterAttack.getY(), afterAttack.isStrike());
 				}
 			} catch (ClassNotFoundException e) {

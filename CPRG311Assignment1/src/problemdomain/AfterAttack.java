@@ -36,13 +36,5 @@ public class AfterAttack implements Serializable {
 	public boolean isStrike() {
 		return strike;
 	}
-
-	@Override
-	public String toString() {
-		return "AfterAttack [username=" + username + ", x=" + x + ", y=" + y + ", strike=" + strike + "]";
-	}
-	
-	
-	
 }
 	
