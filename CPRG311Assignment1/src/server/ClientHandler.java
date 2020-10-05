@@ -3,10 +3,9 @@
  */
 package server;
 
-import problemdomain.*;
+import java.io.IOException;
 
-import java.net.*;
-import java.io.*;
+import problemdomain.*;
 
 /**
  * @author nhamnett
@@ -35,11 +34,23 @@ public class ClientHandler implements Runnable {
 		
 		thread2.start();
 		
+		boolean goFirst = (((int) (Math.random() * 100)) % 2 == 0) ? true : false;
+		
+		StartGame firstPlayer = new StartGame(true, goFirst);
+		StartGame secondPlayer = new StartGame(true, !goFirst);
+		try {
+			connection1.getOos().writeObject(firstPlayer);
+			connection2.getOos().writeObject(secondPlayer);
+			//objectOutputStream.reset(); // TODO: necessary?
+		} catch (IOException e1) {			
+			e1.printStackTrace();
+		}
+		
+		
 		try {
 			thread1.join();
 			thread2.join();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

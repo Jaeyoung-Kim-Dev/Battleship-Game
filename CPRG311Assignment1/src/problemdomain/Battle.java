@@ -28,10 +28,4 @@ public class Battle implements Serializable {
 	public int getY() {
 		return y;
 	}
-
-	@Override
-	public String toString() {
-		return "Battle [username=" + username + ", x=" + x + ", y=" + y + "]";
-	}	
-	
 }

@@ -58,9 +58,9 @@ public class MainWindow {
 
 	private ListView<String> messageList;
 
-	int totalships = 0;	// to calculate all ships on maps
+	int totalships = 0; // to calculate all ships on maps
 
-	private boolean myTurn = true;
+	private boolean myTurn = false; // TODO: should be true to start game (delete this comment)
 
 	private static final int TILE_SIZE = 40;
 	private static final int MAP_WIDTH = 400;
@@ -70,12 +70,11 @@ public class MainWindow {
 	private static final int Y_TILES = MAP_HEIGHT / TILE_SIZE;
 
 	private static final int AIRCRAFTCARRIER = 5;
-	private static final int BATTLESHIP= 4;
+	private static final int BATTLESHIP = 4;
 	private static final int CRUISER = 3;
 	private static final int SUBMARINE = 3;
 	private static final int DESTROYER = 2;
 
-	
 	private MyTile[][] myGrid;// = new MyTile[X_TILES][Y_TILES];
 	private EnemyTile[][] enemyGrid = new EnemyTile[X_TILES][Y_TILES];
 
@@ -95,7 +94,7 @@ public class MainWindow {
 	public Parent base() {
 
 		BorderPane root = new BorderPane();
-		//root.setStyle("-fx-background-color: #336699;");
+		// root.setStyle("-fx-background-color: #336699;");
 		root.setCenter(createGame());
 		root.setRight(connect());
 
@@ -115,9 +114,6 @@ public class MainWindow {
 	public Pane gameMap() {
 
 		BorderPane gameBaord = new BorderPane();
-
-		// Map myMap = new Map();
-		// Map oppositeMap = new Map();
 
 		gameBaord.setLeft(createMyMap());
 		gameBaord.setRight(createEnemyMap());
@@ -150,7 +146,7 @@ public class MainWindow {
 		HBox hbox = new HBox();
 		hbox.setPadding(new Insets(15, 15, 15, 15));
 		hbox.setSpacing(30);
-		//hbox.setStyle("-fx-background-color: #336699;");
+		// hbox.setStyle("-fx-background-color: #336699;");
 		hbox.setAlignment(Pos.CENTER);
 
 		buttonConnect = new Button("Connect");
@@ -245,7 +241,6 @@ public class MainWindow {
 				socket = new Socket(ip, port);
 
 				this.addMessage("Connected.");
-				// System.out.println("Connected!"); //TODO: delete
 
 				buttonConnect.setDisable(true);
 				buttonDisconnect.setDisable(false);
@@ -262,11 +257,9 @@ public class MainWindow {
 
 				thread.start();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 
 				this.addMessage("Unable to connect.");
-				// System.out.println("Unable to connect!"); //TODO: delete
 			}
 
 		});
@@ -325,7 +318,7 @@ public class MainWindow {
 
 		BorderPane status = new BorderPane();
 		status.setPadding(new Insets(50, 50, 15, 15));
-		//status.setStyle("-fx-background-color: #336699;");
+		// status.setStyle("-fx-background-color: #336699;");
 
 		BorderPane myBoard = new BorderPane();
 		BorderPane enemyBoard = new BorderPane();
@@ -334,7 +327,7 @@ public class MainWindow {
 		Text enemyBoardTitle = new Text("Enemy's Board");
 
 		myBoard.setPadding(new Insets(15, 15, 15, 15));
-		//myBoard.setStyle("-fx-background-color: #336699;");
+		// myBoard.setStyle("-fx-background-color: #336699;");
 		myBoard.setPrefSize(MAP_WIDTH + 30, 50);
 
 		myBoard.setTop(myBoardTitle);
@@ -351,11 +344,9 @@ public class MainWindow {
 	// MyMap part begins
 
 	public Pane createMyMap() {
-		int[] ships = { AIRCRAFTCARRIER, BATTLESHIP, CRUISER, SUBMARINE, DESTROYER };
-
 		BorderPane root = new BorderPane();
 		root.setPadding(new Insets(15, 15, 15, 15));
-		//root.setStyle("-fx-background-color: #336699;");
+		// root.setStyle("-fx-background-color: #336699;");
 		root.setPrefSize(MAP_WIDTH + 30, MAP_HEIGHT + 30);
 
 		Pane titles = new Pane();
@@ -368,16 +359,54 @@ public class MainWindow {
 				titles.getChildren().add(tile);
 			}
 		}
-		
-		for (int ship : ships) {
-			randomPlaceShip(ship);	// randomly place ships(array) on my map
-			totalships += ship;		// to calculate all ships on maps
-		}
-
+		//startGame();		
 		root.setCenter(titles);
 
 		return root;
 
+	}
+
+	public class MyTile extends StackPane {
+		private int x, y;
+		private boolean strike;
+
+		private Rectangle border = new Rectangle(TILE_SIZE - 2, TILE_SIZE - 2);
+		private Text text = new Text();		
+		
+		public MyTile(int x, int y) {
+			this.x = x;
+			this.y = y;
+
+			border.setStroke(Color.LIGHTGRAY);			
+
+			getChildren().addAll(border, text);
+
+			setTranslateX(this.x * TILE_SIZE);
+			setTranslateY(this.y * TILE_SIZE);
+		}
+
+	}
+
+	public void startGame(boolean goFirst) {
+		int[] ships = { AIRCRAFTCARRIER, BATTLESHIP, CRUISER, SUBMARINE, DESTROYER };
+		
+		// clear maps already created.
+		for (int y = 0; y < Y_TILES; y++) {
+			for (int x = 0; x < X_TILES; x++) {
+				myGrid[x][y].strike = false;
+				myGrid[x][y].border.setFill(Color.BLACK);
+				//enemyGrid[x][y].strike = false;
+				//enemyGrid[x][y].isOpen = false;
+				//enemyGrid[x][y].border.setFill(Color.BLACK);
+			}
+		}
+		
+		for (int ship : ships) {
+			randomPlaceShip(ship); // randomly place ships(array) on my map
+			totalships += ship; // to calculate all ships on maps
+		}
+		
+		if(goFirst) myTurn = true;
 	}
 
 	public void randomPlaceShip(int ship) {
@@ -392,12 +421,13 @@ public class MainWindow {
 			shipSize = ship;
 			shipPlaced = false;
 			alreadyExist = false;
-			vertical = (((int) (Math.random() * 100)) % 2 == 0) ? true : false; // vertical or horizontal for ship
-																				// position
 			start_x = randomNumber(0, 10 - shipSize);
 			start_y = randomNumber(0, 10 - shipSize);
 
-			// validate the other ship is placed in the title.
+			// vertical or horizontal for ship position //
+			vertical = (((int) (Math.random() * 100)) % 2 == 0) ? true : false;
+
+			// validate the other ship is placed in the tile.
 			if (vertical) {
 				for (int i = 0; i < shipSize; i++) {
 					if (myGrid[start_x + i][start_y].strike)
@@ -410,7 +440,7 @@ public class MainWindow {
 				}
 			}
 
-			// validate the other ship is placed in the title.
+			// placed ships in the tile.
 			if (!alreadyExist && vertical) {
 				for (int i = 0; i < shipSize; i++) {
 					myGrid[start_x + i][start_y].strike = true;
@@ -432,55 +462,12 @@ public class MainWindow {
 		return (int) (Math.random() * range) + min;
 	}
 
-	public class MyTile extends StackPane {
-		private int x, y;
-		private boolean strike;
-		private boolean isOpen = false;
-
-		private Rectangle border = new Rectangle(TILE_SIZE - 2, TILE_SIZE - 2);
-		private Text text = new Text();
-
-		public MyTile(int x, int y) {
-			this.x = x;
-			this.y = y;
-
-			border.setStroke(Color.LIGHTGRAY);
-
-			getChildren().addAll(border, text);
-
-			setTranslateX(this.x * TILE_SIZE);
-			setTranslateY(this.y * TILE_SIZE);
-
-			setOnMouseClicked(e -> open());
-		}
-
-		public void open() {
-			/*
-			 * if (isOpen) return;
-			 * 
-			 * if (strike) { border.setFill(Color.RED);
-			 * 
-			 * // Create a Message object. Battle battle = new Battle(x,y);
-			 * 
-			 * try { // Send Message to the server. objectOutputStream.writeObject(battle);
-			 * 
-			 * // If it's sent successfully, add message to chat list.
-			 * addMessage(battle.toString()); } catch (IOException e) { // TODO
-			 * Auto-generated catch block e.printStackTrace();
-			 * 
-			 * addMessage("Unable to send message."); } return; }
-			 * 
-			 * isOpen = true; text.setVisible(true); border.setFill(null);
-			 */
-		}
-	}
-
 	// EnemyMap part begins
 
 	public Pane createEnemyMap() {
 		BorderPane root = new BorderPane();
 		root.setPadding(new Insets(15, 15, 15, 15));
-		//root.setStyle("-fx-background-color: #336699;");
+		// root.setStyle("-fx-background-color: #336699;");
 		root.setPrefSize(MAP_WIDTH + 30, MAP_HEIGHT + 30);
 
 		Pane titles = new Pane();
@@ -519,10 +506,13 @@ public class MainWindow {
 			setTranslateY(this.y * TILE_SIZE);
 
 			setOnMouseClicked(e -> open());
+			setOnMouseMoved(e -> hover());
+			//setOnMouseReleased(e -> exit());
 		}
 
 		public void open() {
-			if (isOpen || !myTurn) // return immediately if it's already open or not my turn.
+			// return immediately if it's already open or not my turn.
+			if (isOpen || !myTurn) 
 				return;
 
 			Battle battle = new Battle(username, x, y);
@@ -550,15 +540,21 @@ public class MainWindow {
 			isOpen = true;
 			myTurn = false;
 		}
+		
+		public void hover() {			
+			border.setStroke(Color.RED);
+		}
+		
+		public void exit() {			
+			border.setStroke(Color.LIGHTGRAY);
+		}
 	}
 
 	public void gotAttacked(int x, int y) {
 		boolean _strike = myGrid[x][y].strike;
-		if (_strike) {
-			addMessage("You got attacked!");
+		if (_strike) {			
 			myGrid[x][y].border.setFill(Color.RED);
-		} else {
-			addMessage("Missed!");
+		} else {			
 			myGrid[x][y].border.setFill(null);
 		}
 		AfterAttack afterAttack = new AfterAttack(username, x, y, _strike);
@@ -567,19 +563,18 @@ public class MainWindow {
 			objectOutputStream.writeObject(afterAttack);
 			objectOutputStream.reset(); // TODO: necessary?
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		myTurn = true;
+		addMessage("It's yourturn to stike.");
 	}
 
 	public void attacked(int x, int y, boolean strike) {
-		if (strike) {
-			addMessage("Success!");
+		if (strike) {			
 			enemyGrid[x][y].border.setFill(Color.RED);
-		} else {
-			addMessage("Missed!");
+		} else {			
 			enemyGrid[x][y].border.setFill(null);
 		}
+		addMessage("Waiting for opponent to strike.");
 	}
 }

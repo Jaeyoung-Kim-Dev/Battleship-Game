@@ -25,10 +25,13 @@ public class InputOutputHandler implements Runnable {
 		while (!this.input.getSocket().isClosed() && !this.output.getSocket().isClosed()) {
 			try {
 				Object receive = (Object) this.input.getOis().readObject();
-				if (receive instanceof Message) {
+				if (receive instanceof StartGame) {
+					StartGame startGame = (StartGame) receive;
+					System.out.println("Received message: " + startGame.toString());
+					this.output.getOos().writeObject(startGame);
+				} else if (receive instanceof Message) {
 					Message message = (Message) receive;
 					System.out.println("Received message: " + message.toString());
-					// Message send = new Message("Server", "Okay!");
 					this.output.getOos().writeObject(message);
 				} else if (receive instanceof Battle) {
 					Battle battle = (Battle) receive;
