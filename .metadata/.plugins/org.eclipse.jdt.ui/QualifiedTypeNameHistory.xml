@@ -25,4 +25,5 @@
 <fullyQualifiedTypeName name="problemdomain.Battle"/>
 <fullyQualifiedTypeName name="problemdomain.ReGame"/>
 <fullyQualifiedTypeName name="problemdomain.ExitGame"/>
+<fullyQualifiedTypeName name="problemdomain.QuitGame"/>
 </qualifiedTypeNameHistroy>

@@ -4,17 +4,35 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import problemdomain.*;
 
-public class ServerDriver {
+public class ServerDriver extends Application  {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {		
+		launch(args);		
+	}
+
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		
+		ServerGUI serverGUI= new ServerGUI();
+		
+		Scene scene = new Scene(serverGUI.base());
+		//scene.getStylesheets().add(ServerGUI.class.getResource("ClientDriver.css").toExternalForm());
+		primaryStage.setTitle("Battleship Game Server");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+				
 		ServerSocket listener = new ServerSocket(1234);
 
-		System.out.println("Waiting for connection port 1234...");
+		System.out.println("Listening on port 1234.");
+		System.out.println("Waiting for connection...");
 
 		ArrayList<ClientConnection> connections = new ArrayList<>();
-
+		
 		while (listener.isBound()) {
 			try {
 				Socket client = listener.accept();
@@ -52,6 +70,7 @@ public class ServerDriver {
 		}
 
 		listener.close();
+		
 	}
 
 }
