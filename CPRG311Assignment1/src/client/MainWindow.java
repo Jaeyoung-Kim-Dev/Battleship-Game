@@ -38,16 +38,17 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import problemdomain.AfterAttack;
-import problemdomain.Battle;
-import problemdomain.Message;
-import problemdomain.ReGame;
+import problemdomain.*;
 
 public class MainWindow {
 
-	private Socket socket;
-	
 	private String username;
+
+	private String ip;
+
+	private int port;
+
+	private Socket socket;
 
 	private OutputStream outputStream;
 
@@ -103,7 +104,7 @@ public class MainWindow {
 		BorderPane root = new BorderPane();
 		// root.setStyle("-fx-background-color: #336699;");
 		root.setCenter(createGame());
-		root.setRight(connect());
+		root.setRight(connectArea());
 
 		return root;
 	}
@@ -128,7 +129,7 @@ public class MainWindow {
 		return gameBaord;
 	}
 
-	public Pane connect() {
+	public Pane connectArea() {
 
 		BorderPane connectionBaord = new BorderPane();
 
@@ -182,19 +183,12 @@ public class MainWindow {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
-					
-					ReGame reGame = new ReGame(username, false);					
-					objectOutputStream.writeObject(reGame);
-					
-					objectInputStream.close();
-					objectOutputStream.close();
 
-					socket.close();
+					QuitGame quitGame = new QuitGame(username, true);
+					objectOutputStream.writeObject(quitGame);
 
-					buttonConnect.setDisable(false);
-					buttonDisconnect.setDisable(true);
+					disconnect();
 
-					addMessage("Disconnected.");
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -208,7 +202,7 @@ public class MainWindow {
 	}
 
 	private GridPane setConnection() {
-		
+
 		GridPane grid = new GridPane();
 		grid.setAlignment(Pos.CENTER);
 		grid.setHgap(10);
@@ -246,36 +240,58 @@ public class MainWindow {
 		buttonConfirm.setOnAction(event -> {
 
 			username = userNameField.getText();
-			String ip = addressField.getText();
-			int port = Integer.parseInt(portField.getText());
+			ip = addressField.getText();
+			port = Integer.parseInt(portField.getText());
 
-			try {
-				socket = new Socket(ip, port);
-
-				this.addMessage("Connected.");
-
-				buttonConnect.setDisable(true);
-				buttonDisconnect.setDisable(false);
-				connectForm.close();
-
-				outputStream = socket.getOutputStream();
-				objectOutputStream = new ObjectOutputStream(outputStream);
-
-				inputStream = socket.getInputStream();
-				objectInputStream = new ObjectInputStream(inputStream);
-
-				ServerHandler serverHandler = new ServerHandler(this, socket, objectInputStream);
-				Thread thread = new Thread(serverHandler);
-
-				thread.start();
-			} catch (IOException e) {
-				e.printStackTrace();
-
-				this.addMessage("Unable to connect.");
-			}
+			connect(ip, port);
 
 		});
 		return grid;
+	}
+
+	public void connect(String ip, int port) {
+		try {
+			socket = new Socket(ip, port);
+
+			this.addMessage("Connected.");
+
+			buttonConnect.setDisable(true);
+			buttonDisconnect.setDisable(false);
+			connectForm.close();
+
+			outputStream = socket.getOutputStream();
+			objectOutputStream = new ObjectOutputStream(outputStream);
+
+			inputStream = socket.getInputStream();
+			objectInputStream = new ObjectInputStream(inputStream);
+
+			ServerHandler serverHandler = new ServerHandler(this, socket, objectInputStream);
+			Thread thread = new Thread(serverHandler);
+
+			thread.start();
+		} catch (IOException e) {
+			e.printStackTrace();
+
+			this.addMessage("Unable to connect.");
+		}
+	}
+
+	public void disconnect() {
+		try {
+			objectInputStream.close();
+			objectOutputStream.close();
+
+			// socket.close();
+
+			buttonConnect.setDisable(false);
+			buttonDisconnect.setDisable(true);
+
+			addMessage("Disconnected.");
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public ListView<String> chatList() {
@@ -371,7 +387,7 @@ public class MainWindow {
 				titles.getChildren().add(tile);
 			}
 		}
-		//startGame();		
+		// startGame();
 		root.setCenter(titles);
 
 		return root;
@@ -383,13 +399,13 @@ public class MainWindow {
 		private boolean strike;
 
 		private Rectangle border = new Rectangle(TILE_SIZE - 2, TILE_SIZE - 2);
-		private Text text = new Text();		
-		
+		private Text text = new Text();
+
 		public MyTile(int x, int y) {
 			this.x = x;
 			this.y = y;
 
-			border.setStroke(Color.LIGHTGRAY);			
+			border.setStroke(Color.LIGHTGRAY);
 
 			getChildren().addAll(border, text);
 
@@ -401,29 +417,28 @@ public class MainWindow {
 
 	public void startGame(boolean goFirst) {
 		int[] ships = { AIRCRAFTCARRIER, BATTLESHIP, CRUISER, SUBMARINE, DESTROYER };
-		
+
 		// clear maps already created.
 		for (int y = 0; y < Y_TILES; y++) {
 			for (int x = 0; x < X_TILES; x++) {
 				myGrid[x][y].strike = false;
 				myGrid[x][y].border.setFill(Color.BLACK);
-				//enemyGrid[x][y].strike = false;
-				//enemyGrid[x][y].isOpen = false;
-				//enemyGrid[x][y].border.setFill(Color.BLACK);
+				// enemyGrid[x][y].strike = false;
+				// enemyGrid[x][y].isOpen = false;
+				// enemyGrid[x][y].border.setFill(Color.BLACK);
 			}
 		}
-		
-		
-			randomPlaceShip(2); // TODO: delete
-			totalships = 2; // to calculate all ships on maps
-		
-		
-		for (int ship : ships) {		
-			//randomPlaceShip(ship); // randomly place ships(array) on my map
-			//totalships += ship; // to calculate all ships on maps
+
+		randomPlaceShip(2); // TODO: delete
+		totalships = 2; // to calculate all ships on maps
+
+		for (int ship : ships) {
+			// randomPlaceShip(ship); // randomly place ships(array) on my map
+			// totalships += ship; // to calculate all ships on maps
 		}
-		
-		if(goFirst) myTurn = true;
+
+		if (goFirst)
+			myTurn = true;
 	}
 
 	public void randomPlaceShip(int ship) {
@@ -524,12 +539,12 @@ public class MainWindow {
 
 			setOnMouseClicked(e -> open());
 			setOnMouseMoved(e -> hover());
-			//setOnMouseExitedTarget(e -> exit());
+			// setOnMouseExitedTarget(e -> exit());
 		}
 
 		public void open() {
 			// return immediately if it's already open or not my turn.
-			if (isOpen || !myTurn) 
+			if (isOpen || !myTurn)
 				return;
 
 			Battle battle = new Battle(username, x, y);
@@ -557,53 +572,61 @@ public class MainWindow {
 			isOpen = true;
 			myTurn = false;
 		}
-		
-		public void hover() {			
+
+		public void hover() {
 			border.setStroke(Color.RED);
 		}
-		
-		public void exit() {			
+
+		public void exit() {
 			border.setStroke(Color.LIGHTGRAY);
 		}
 	}
 
-	public void gotAttacked(int x, int y) {		
+	public void battle(int x, int y) {
 		boolean _strike = myGrid[x][y].strike;
-		
-		if (_strike) {			
+
+		if (_strike) {
 			myGrid[x][y].border.setFill(Color.RED);
 			totalships--;
 			addMessage(totalships + "ships left.");
-		} else {			
+		} else {
 			myGrid[x][y].border.setFill(null);
 		}
-		
-		AfterAttack afterAttack = new AfterAttack(username, x, y, _strike);
 
+		AfterAttack afterAttack = new AfterAttack(username, x, y, _strike, totalships);
 		try {
 			objectOutputStream.writeObject(afterAttack);
-			objectOutputStream.reset(); // TODO: necessary?
+			// objectOutputStream.reset(); // TODO: necessary?
 		} catch (IOException e) {
 			e.printStackTrace();
-		}	
-		
+		}
+
 		if (totalships == 0) {
-			addMessage("Game Over");			
-			int port = JOptionPane.showConfirmDialog(null, "confirm", "cancel", 1);
-			addMessage(""+port);			
+			addMessage("Game Over. You lose.");
+
+			connectForm = new Stage();
+			connectForm.initModality(Modality.APPLICATION_MODAL);
+			connectForm.setTitle("Connect to the server");
+			VBox dialogVbox = new VBox(20);
+			dialogVbox.getChildren().add(setConnection());
+			Scene dialogScene = new Scene(dialogVbox, 400, 260);
+			connectForm.setScene(dialogScene);
+			connectForm.show();
 		} else {
 			myTurn = true;
-			addMessage("It's your turn to stike.");	
+			addMessage("It's your turn to stike.");
 		}
-		
 	}
 
-	public void attacked(int x, int y, boolean strike) {
-		if (strike) {			
+	public void afterAttack(int x, int y, boolean strike, int totalships) {
+		if (strike) {
 			enemyGrid[x][y].border.setFill(Color.RED);
-		} else {			
+		} else {
 			enemyGrid[x][y].border.setFill(null);
 		}
-		addMessage("Waiting for opponent to strike.");
+		if (totalships > 0)
+			addMessage("Waiting for opponent to strike.");
+		else
+			addMessage("Game over. You win!");
 	}
 }

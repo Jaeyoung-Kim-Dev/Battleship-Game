@@ -34,6 +34,7 @@ public class ClientHandler implements Runnable {
 		
 		thread2.start();
 		
+		// randomly pick which user goes first.
 		boolean goFirst = (((int) (Math.random() * 100)) % 2 == 0) ? true : false;
 		
 		StartGame firstPlayer = new StartGame(true, goFirst);

@@ -37,15 +37,20 @@ public class ServerHandler implements Runnable {
 					this.mainWindow.addMessage(receive.toString());
 				} else if (receive instanceof Battle) {
 					Battle battle = (Battle) receive;					
-					this.mainWindow.gotAttacked(battle.getX(),battle.getY());
+					this.mainWindow.battle(battle.getX(),battle.getY());
 				} else if (receive instanceof AfterAttack) {
-					AfterAttack afterAttack = (AfterAttack) receive;					
-					this.mainWindow.attacked(afterAttack.getX(),afterAttack.getY(), afterAttack.isStrike());
+					AfterAttack afterAttack = (AfterAttack) receive;
+					//if(afterAttack.getTotalships() == 0) this.mainWindow.addMessage(afterAttack.toString());
+					this.mainWindow.afterAttack(afterAttack.getX(),afterAttack.getY(), afterAttack.isStrike(), afterAttack.getTotalships());
 				} else if (receive instanceof ReGame) {
-					ReGame reGame = (ReGame) receive;					
-					//this.mainWindow.attacked(afterAttack.getX(),afterAttack.getY(), afterAttack.isStrike());
-				} 
-				
+					ReGame reGame = (ReGame) receive;
+					if (!reGame.isWantReGame()) server.close();
+					this.mainWindow.connect(reGame.getIp(), reGame.getPort());
+				} else if (receive instanceof QuitGame) {
+					QuitGame quitGame = (QuitGame) receive;
+					if (quitGame.isQuitGame()) this.mainWindow.disconnect();
+					server.close();
+				}
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {

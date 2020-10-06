@@ -33,4 +33,9 @@ public class Battle implements Serializable {
 		return y;
 	}
 
+	@Override
+	public String toString() {
+		return "Battle [username=" + username + ", x=" + x + ", y=" + y + "]";
+	}
+
 }
