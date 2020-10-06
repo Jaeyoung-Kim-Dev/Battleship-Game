@@ -1,100 +1,90 @@
+/**
+ * 
+ */
 package server;
 
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
+import javax.swing.*;
 
+import problemdomain.Message;
+
+/**
+ * @author nhamnett
+ *
+ */
 public class ServerGUI {
-
-	private ListView<String> messageList;
+	private JFrame frame;
+	
+	private DefaultListModel<String> chatListModel;
+	private JList<String> chatList;
+	
+	private Date date;
 
 	public ServerGUI() {
+		this.frame = new JFrame("Battleship Game Server");
 		
+		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.frame.setLayout(new BorderLayout());
+		this.frame.setSize(400, 800);
+		
+		JPanel chatPanel = this.createChatPanel();
+		this.frame.add(chatPanel, BorderLayout.CENTER);
+		
+		JPanel connectionPanel = this.createConnectionPanel();
+		this.frame.add(connectionPanel, BorderLayout.SOUTH);
 	}
 	
-	public Parent base() {
-
-		BorderPane root = new BorderPane();
-		// root.setStyle("-fx-background-color: #336699;");
-		root.setCenter(messageArea());
-		root.setBottom(exitArea());
-	
-		return root;
-	}
-
-	private Pane messageArea() {
-		BorderPane message = new BorderPane();
+	private JPanel createChatPanel() {
+		JPanel panel = new JPanel(new BorderLayout());
 		
-		message.setCenter(messageViewer());
-		return message;
-	}
-
-	public ListView<String> messageViewer() {
-
-		messageList = new ListView<String>();
-
-		return messageList;
+		this.chatListModel = new DefaultListModel<String>();
+		this.chatList = new JList(this.chatListModel);
+		
+		JScrollPane scrollPane = new JScrollPane(this.chatList);
+		
+		panel.add(scrollPane, BorderLayout.CENTER);
+		
+		return panel;
 	}
 	
-	private HBox exitArea() {
-
-		HBox hbox = new HBox();
+	private JPanel createConnectionPanel() {
+		JPanel panel = new JPanel(new GridLayout(1, 2));
+			
 		
-		Button buttonExit = new Button("Exit");
-
-		HBox.setHgrow(buttonExit, Priority.ALWAYS);
-					
-		buttonExit.setMaxWidth(Double.MAX_VALUE);
+		JButton exitButton = new JButton("Exit");
 		
-		hbox.getChildren().add(buttonExit);
-		
-		buttonExit.setOnAction(event -> {
+		exitButton.addActionListener((ActionEvent evt) -> {
 			System.exit(0);
 		});
-
-		return hbox;
+		
+		panel.add(exitButton);
+		
+		return panel;
 	}
 	
-/*
-	private Pane exitArea() {
-
-		BorderPane exit = new BorderPane();
-		
-		Button buttonExit = new Button("Exit");
-
-		exit.(buttonExit);
-			
-		
-		buttonExit.setOnAction(event -> {
-			
-		});
-
-		return exit;
-	}
-*/
+	/**
+	 * Add a message to the JList.
+	 * @param message
+	 */
 	public void addMessage(String message) {
-		this.messageList.getItems().add(message);
-		// this.messageList.getItems().add("msg added");
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		this.date = new Date();
+		String currentDateTime = String.format("[%s] ", format.format(this.date));
+		this.chatListModel.addElement(currentDateTime+message);
 	}
-
+	
+	public void display() {
+		this.frame.setVisible(true);		
+	}
 }
