@@ -44,7 +44,7 @@ public class InputOutputHandler implements Runnable {
 				} else if (receive instanceof ReGame) {
 					ReGame reGame = (ReGame) receive;
 					System.out.println("Received message: " + reGame.toString());
-					this.input.getSocket().close();					
+					this.input.getSocket().close();
 					this.output.getOos().writeObject(reGame);
 					//this.output.getSocket().close();			
 				} else if (receive instanceof QuitGame) {
