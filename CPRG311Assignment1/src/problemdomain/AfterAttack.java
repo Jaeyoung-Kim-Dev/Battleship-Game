@@ -9,16 +9,17 @@ public class AfterAttack implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String username;
-	
-	private int x,y;
-	
+
+	private int x, y, totalships;
+
 	private boolean strike;
 
-	public AfterAttack(String username, int x, int y, boolean strike) {
+	public AfterAttack(String username, int x, int y, boolean strike, int totalships) {
 		this.username = username;
 		this.x = x;
 		this.y = y;
 		this.strike = strike;
+		this.totalships = totalships;
 	}
 
 	public String getUsername() {
@@ -33,8 +34,18 @@ public class AfterAttack implements Serializable {
 		return y;
 	}
 
+	public int getTotalships() {
+		return totalships;
+	}
+
 	public boolean isStrike() {
 		return strike;
 	}
+
+	@Override
+	public String toString() {
+		return "AfterAttack [username=" + username + ", x=" + x + ", y=" + y + ", totalships=" + totalships
+					+ ", strike=" + strike + "]";
+
+	}
 }
-	

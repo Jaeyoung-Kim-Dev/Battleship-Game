@@ -47,7 +47,7 @@ public class ServerDriver {
 				}
 
 			} catch (IOException ex) {
-
+				ex.printStackTrace();
 			}
 		}
 

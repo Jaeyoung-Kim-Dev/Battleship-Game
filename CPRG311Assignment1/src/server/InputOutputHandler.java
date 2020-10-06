@@ -44,9 +44,16 @@ public class InputOutputHandler implements Runnable {
 				} else if (receive instanceof ReGame) {
 					ReGame reGame = (ReGame) receive;
 					System.out.println("Received message: " + reGame.toString());
-					this.input.getSocket().close();
+					this.input.getSocket().close();					
 					this.output.getOos().writeObject(reGame);
-				} 
+					//this.output.getSocket().close();			
+				} else if (receive instanceof QuitGame) {
+					QuitGame quitGame = (QuitGame) receive;
+					System.out.println("Received message: " + quitGame.toString());
+					this.input.getSocket().close();					
+					this.output.getOos().writeObject(quitGame);
+					//this.output.getSocket().close();			
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
