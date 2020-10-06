@@ -18,19 +18,14 @@ public class ServerDriver extends Application  {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		
-		ServerGUI serverGUI= new ServerGUI();
+		ServerGUI serverGUI = new ServerGUI();
+		serverGUI.display();
 		
-		Scene scene = new Scene(serverGUI.base());
-		//scene.getStylesheets().add(ServerGUI.class.getResource("ClientDriver.css").toExternalForm());
-		primaryStage.setTitle("Battleship Game Server");
-		primaryStage.setScene(scene);
-		primaryStage.show();
-				
 		ServerSocket listener = new ServerSocket(1234);
 
-		System.out.println("Listening on port 1234.");
-		System.out.println("Waiting for connection...");
-
+		serverGUI.addMessage("Listening on port 1234.");
+		serverGUI.addMessage("Waiting for connection...");
+		
 		ArrayList<ClientConnection> connections = new ArrayList<>();
 		
 		while (listener.isBound()) {
@@ -54,7 +49,7 @@ public class ServerDriver extends Application  {
 					ClientConnection connection2 = connections.get(1);
 
 					// Spin up a thread to handle connections
-					ClientHandler clientHandler = new ClientHandler(connection1, connection2);
+					ClientHandler clientHandler = new ClientHandler(connection1, connection2, serverGUI);
 					Thread thread = new Thread(clientHandler);
 					
 					thread.start();
@@ -69,7 +64,7 @@ public class ServerDriver extends Application  {
 			}
 		}
 
-		listener.close();
+		listener.close();	
 		
 	}
 

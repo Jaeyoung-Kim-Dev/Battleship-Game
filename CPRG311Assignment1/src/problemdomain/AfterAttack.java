@@ -44,8 +44,7 @@ public class AfterAttack implements Serializable {
 
 	@Override
 	public String toString() {
-		return "AfterAttack [username=" + username + ", x=" + x + ", y=" + y + ", totalships=" + totalships
-					+ ", strike=" + strike + "]";
-
+		if (strike) return "Strike to " + username + " (" + x +", " + y + ").";
+		else return "The missile missed.";
 	}
 }

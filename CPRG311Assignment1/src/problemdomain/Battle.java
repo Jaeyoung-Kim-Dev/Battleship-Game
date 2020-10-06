@@ -35,7 +35,7 @@ public class Battle implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Battle [username=" + username + ", x=" + x + ", y=" + y + "]";
+		return username + " fired a missile at (" + x +", " + y + ").";
 	}
 
 }

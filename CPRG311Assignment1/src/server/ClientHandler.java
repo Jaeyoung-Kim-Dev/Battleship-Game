@@ -14,24 +14,25 @@ import problemdomain.*;
 public class ClientHandler implements Runnable {
 	private ClientConnection connection1;
 	private ClientConnection connection2;
+	private ServerGUI serverGUI;
 	
-	public ClientHandler(ClientConnection connection1, ClientConnection connection2) {
+	public ClientHandler(ClientConnection connection1, ClientConnection connection2, ServerGUI serverGUI) {
 		this.connection1 = connection1;
 		this.connection2 = connection2;
+		this.serverGUI = serverGUI;
 	}
 	
 	@Override
 	public void run() {
-		
-		
-		System.out.println("Waiting for messages...");
-		
-		InputOutputHandler ioHandler1 = new InputOutputHandler(this.connection1, this.connection2);
+				
+		serverGUI.addMessage("Waiting for messages...");		
+				
+		InputOutputHandler ioHandler1 = new InputOutputHandler(this.connection1, this.connection2, this.serverGUI);
 		Thread thread1 = new Thread(ioHandler1);
 		
 		thread1.start();
 		
-		InputOutputHandler ioHandler2 = new InputOutputHandler(this.connection2, this.connection1);
+		InputOutputHandler ioHandler2 = new InputOutputHandler(this.connection2, this.connection1, this.serverGUI);
 		Thread thread2 = new Thread(ioHandler2);
 		
 		thread2.start();
