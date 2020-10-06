@@ -603,19 +603,12 @@ public class MainWindow {
 
 		if (totalships == 0) {
 			addMessage("Game Over. You lose.");
-
-			connectForm = new Stage();
-			connectForm.initModality(Modality.APPLICATION_MODAL);
-			connectForm.setTitle("Connect to the server");
-			VBox dialogVbox = new VBox(20);
-			dialogVbox.getChildren().add(setConnection());
-			Scene dialogScene = new Scene(dialogVbox, 400, 260);
-			connectForm.setScene(dialogScene);
-			connectForm.show();
+			reGame(username, ip, port);
 		} else {
 			myTurn = true;
 			addMessage("It's your turn to stike.");
 		}
+
 	}
 
 	public void afterAttack(int x, int y, boolean strike, int totalships) {
@@ -628,5 +621,26 @@ public class MainWindow {
 			addMessage("Waiting for opponent to strike.");
 		else
 			addMessage("Game over. You win!");
+	}
+
+	public void reGame(String username, String ip, int port) {
+		try {			
+			int _reGame = JOptionPane.showConfirmDialog(null, "Do you want to play a new game?", "Regame?",
+					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			if (_reGame == 0) {
+				addMessage("Let's play again!");
+			boolean stopGame = Boolean.parseBoolean(Integer.toString(_reGame));
+
+			ReGame reGame = new ReGame(username, ip, port, stopGame);
+			objectOutputStream.writeObject(reGame);
+			// objectOutputStream.reset(); // TODO: necessary?
+			addMessage(reGame.toString());
+			connect(ip, port);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			addMessage("Unable to join a new game.");
+		}
 	}
 }

@@ -31,25 +31,32 @@ public class ServerHandler implements Runnable {
 				if (receive instanceof StartGame) {
 					StartGame startGame = (StartGame) receive;
 					this.mainWindow.addMessage(startGame.toString());
-					this.mainWindow.startGame(((StartGame) receive).isGoFirst());					
+					this.mainWindow.startGame(((StartGame) receive).isGoFirst());
 				} else if (receive instanceof Message) {
 					receive = (Message) receive;
 					this.mainWindow.addMessage(receive.toString());
 				} else if (receive instanceof Battle) {
-					Battle battle = (Battle) receive;					
-					this.mainWindow.battle(battle.getX(),battle.getY());
+					Battle battle = (Battle) receive;
+					this.mainWindow.battle(battle.getX(), battle.getY());
 				} else if (receive instanceof AfterAttack) {
 					AfterAttack afterAttack = (AfterAttack) receive;
-					//if(afterAttack.getTotalships() == 0) this.mainWindow.addMessage(afterAttack.toString());
-					this.mainWindow.afterAttack(afterAttack.getX(),afterAttack.getY(), afterAttack.isStrike(), afterAttack.getTotalships());
+					// if(afterAttack.getTotalships() == 0)
+					// this.mainWindow.addMessage(afterAttack.toString());
+					this.mainWindow.afterAttack(afterAttack.getX(), afterAttack.getY(), afterAttack.isStrike(),
+							afterAttack.getTotalships());
 				} else if (receive instanceof ReGame) {
 					ReGame reGame = (ReGame) receive;
-					if (!reGame.isWantReGame()) server.close();
-					this.mainWindow.connect(reGame.getIp(), reGame.getPort());
+					if (reGame.isStopGame()) {
+						this.mainWindow.disconnect();
+						server.close();
+					} else
+						this.mainWindow.reGame(reGame.getUsername(), reGame.getIp(), reGame.getPort());
 				} else if (receive instanceof QuitGame) {
 					QuitGame quitGame = (QuitGame) receive;
-					if (quitGame.isQuitGame()) this.mainWindow.disconnect();
+					if (quitGame.isQuitGame()) {
+						this.mainWindow.disconnect();
 					server.close();
+					}
 				}
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
