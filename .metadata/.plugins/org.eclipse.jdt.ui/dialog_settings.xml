@@ -60,7 +60,7 @@
 		<item key="DIALOG_Y_ORIGIN" value="104"/>
 		<item key="DIALOG_WIDTH" value="676"/>
 		<item key="DIALOG_HEIGHT" value="867"/>
-		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|5|0|Segoe UI"/>
+		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
 	</section>
 	<section name="SourceActionDialog.methods">
 		<item key="VisibilityModifier" value="1"/>
@@ -91,5 +91,20 @@
 		<item key="DIALOG_WIDTH" value="676"/>
 		<item key="DIALOG_HEIGHT" value="875"/>
 		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
+	</section>
+	<section name="FatJarPackageWizard">
+		<item key="FatJarPackageWizardPage.ANTSCRIPT_SAVE" value="false"/>
+		<item key="FatJarPackageWizardPage.ANTSCRIPT_LOCATION" value="C:\Users\kornk\GitHub\cprg311A1"/>
+		<item key="FatJarPackageWizardPage.LIBRARY_HANDLING" value="1"/>
+		<item key="FatJarPackageWizardPage.LAUNCH_CONFIGURATION_SELECTION_NAME" value="ServerDriver - CPRG311Assignment1"/>
+		<item key="FatJarPackageWizardPage.DESTINATION_PATH_SELECTION" value="C:\Users\kornk\OneDrive\Desktop\server.jar"/>
+		<list key="FatJarPackageWizardPage.DESTINATION_NAMES_ID">
+			<item value="C:\Users\kornk\OneDrive\Desktop\server.jar"/>
+			<item value="C:\Users\kornk\OneDrive\Desktop\client.jar"/>
+		</list>
+		<list key="FatJarPackageWizardPage.ANTSCRIPT_LOCATION_HISTORY">
+			<item value="C:\Users\kornk\GitHub\cprg311A1.xml"/>
+			<item value=".xml"/>
+		</list>
 	</section>
 </section>

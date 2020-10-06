@@ -22,6 +22,8 @@ public class ClientHandler implements Runnable {
 	
 	@Override
 	public void run() {
+		
+		
 		System.out.println("Waiting for messages...");
 		
 		InputOutputHandler ioHandler1 = new InputOutputHandler(this.connection1, this.connection2);

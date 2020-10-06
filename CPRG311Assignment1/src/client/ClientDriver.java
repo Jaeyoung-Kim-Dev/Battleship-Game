@@ -26,5 +26,10 @@ public class ClientDriver extends Application  {
 		primaryStage.setTitle("Battleship Game");
 		primaryStage.setScene(scene);
 		primaryStage.show();
+		
+		primaryStage.setOnCloseRequest((e) -> {
+			mainWindow.disconnect();
+			System.exit(0);
+		});
 	}
 }

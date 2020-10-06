@@ -68,7 +68,7 @@ public class MainWindow {
 
 	int totalships = 0; // to calculate all ships on maps
 
-	private boolean myTurn = false; // TODO: should be true to start game (delete this comment)
+	private boolean myTurn = false;  // user can strike when this value is true.
 
 	private static final int TILE_SIZE = 40;
 	private static final int MAP_WIDTH = 400;
@@ -88,11 +88,6 @@ public class MainWindow {
 
 	public MainWindow() {
 		myGrid = new MyTile[X_TILES][Y_TILES];
-
-		// this.connection = new Connection(); //objectOutputStream, objectInputStream
-		// this.chat = new Chat(objectOutputStream, objectInputStream);
-		// this.objectOutputStream = chat.getObjectOutputStream();
-
 	}
 
 	public void setMyGrid(MyTile[][] myGrid) {
@@ -182,19 +177,7 @@ public class MainWindow {
 		buttonDisconnect.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				try {
-
-					QuitGame quitGame = new QuitGame(username, true);
-					objectOutputStream.writeObject(quitGame);
-
-					disconnect();
-
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-
-					addMessage("Unable to disconnect.");
-				}
+				disconnect();
 			}
 		});
 
@@ -277,7 +260,10 @@ public class MainWindow {
 	}
 
 	public void disconnect() {
-		try {
+		try {			
+			QuitGame quitGame = new QuitGame(username, true);
+			objectOutputStream.writeObject(quitGame);
+			
 			objectInputStream.close();
 			objectOutputStream.close();
 
@@ -291,6 +277,7 @@ public class MainWindow {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			addMessage("Unable to disconnect.");
 		}
 	}
 
