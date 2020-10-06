@@ -21,6 +21,10 @@ public class Battle implements Serializable {
 		this.y = y;
 	}
 
+	public String getUsername() {
+		return username;
+	}
+	
 	public int getX() {
 		return x;
 	}
@@ -28,4 +32,5 @@ public class Battle implements Serializable {
 	public int getY() {
 		return y;
 	}
+
 }

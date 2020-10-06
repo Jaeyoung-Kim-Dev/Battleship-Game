@@ -41,11 +41,9 @@ public class ClientHandler implements Runnable {
 		try {
 			connection1.getOos().writeObject(firstPlayer);
 			connection2.getOos().writeObject(secondPlayer);
-			//objectOutputStream.reset(); // TODO: necessary?
 		} catch (IOException e1) {			
 			e1.printStackTrace();
-		}
-		
+		}		
 		
 		try {
 			thread1.join();

@@ -3,16 +3,12 @@
  */
 package client;
 
-import problemdomain.AfterAttack;
-import problemdomain.Battle;
-import problemdomain.Message;
-import problemdomain.StartGame;
-
+import problemdomain.*;
 import java.io.*;
 import java.net.*;
 
 /**
- * @author nhamnett
+ * @author Jaeyoung Kim
  *
  */
 public class ServerHandler implements Runnable {
@@ -45,7 +41,11 @@ public class ServerHandler implements Runnable {
 				} else if (receive instanceof AfterAttack) {
 					AfterAttack afterAttack = (AfterAttack) receive;					
 					this.mainWindow.attacked(afterAttack.getX(),afterAttack.getY(), afterAttack.isStrike());
-				}
+				} else if (receive instanceof ReGame) {
+					ReGame reGame = (ReGame) receive;					
+					//this.mainWindow.attacked(afterAttack.getX(),afterAttack.getY(), afterAttack.isStrike());
+				} 
+				
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {

@@ -8,6 +8,9 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import javax.swing.JOptionPane;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -15,7 +18,10 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -35,11 +41,12 @@ import javafx.stage.Stage;
 import problemdomain.AfterAttack;
 import problemdomain.Battle;
 import problemdomain.Message;
+import problemdomain.ReGame;
 
 public class MainWindow {
 
 	private Socket socket;
-
+	
 	private String username;
 
 	private OutputStream outputStream;
@@ -175,6 +182,10 @@ public class MainWindow {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
+					
+					ReGame reGame = new ReGame(username, false);					
+					objectOutputStream.writeObject(reGame);
+					
 					objectInputStream.close();
 					objectOutputStream.close();
 
@@ -197,6 +208,7 @@ public class MainWindow {
 	}
 
 	private GridPane setConnection() {
+		
 		GridPane grid = new GridPane();
 		grid.setAlignment(Pos.CENTER);
 		grid.setHgap(10);
@@ -401,9 +413,14 @@ public class MainWindow {
 			}
 		}
 		
-		for (int ship : ships) {
-			randomPlaceShip(ship); // randomly place ships(array) on my map
-			totalships += ship; // to calculate all ships on maps
+		
+			randomPlaceShip(2); // TODO: delete
+			totalships = 2; // to calculate all ships on maps
+		
+		
+		for (int ship : ships) {		
+			//randomPlaceShip(ship); // randomly place ships(array) on my map
+			//totalships += ship; // to calculate all ships on maps
 		}
 		
 		if(goFirst) myTurn = true;
@@ -507,7 +524,7 @@ public class MainWindow {
 
 			setOnMouseClicked(e -> open());
 			setOnMouseMoved(e -> hover());
-			//setOnMouseReleased(e -> exit());
+			//setOnMouseExitedTarget(e -> exit());
 		}
 
 		public void open() {
@@ -550,13 +567,17 @@ public class MainWindow {
 		}
 	}
 
-	public void gotAttacked(int x, int y) {
+	public void gotAttacked(int x, int y) {		
 		boolean _strike = myGrid[x][y].strike;
+		
 		if (_strike) {			
 			myGrid[x][y].border.setFill(Color.RED);
+			totalships--;
+			addMessage(totalships + "ships left.");
 		} else {			
 			myGrid[x][y].border.setFill(null);
 		}
+		
 		AfterAttack afterAttack = new AfterAttack(username, x, y, _strike);
 
 		try {
@@ -564,9 +585,17 @@ public class MainWindow {
 			objectOutputStream.reset(); // TODO: necessary?
 		} catch (IOException e) {
 			e.printStackTrace();
+		}	
+		
+		if (totalships == 0) {
+			addMessage("Game Over");			
+			int port = JOptionPane.showConfirmDialog(null, "confirm", "cancel", 1);
+			addMessage(""+port);			
+		} else {
+			myTurn = true;
+			addMessage("It's your turn to stike.");	
 		}
-		myTurn = true;
-		addMessage("It's yourturn to stike.");
+		
 	}
 
 	public void attacked(int x, int y, boolean strike) {

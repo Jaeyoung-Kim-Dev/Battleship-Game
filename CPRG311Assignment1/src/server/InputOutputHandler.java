@@ -8,7 +8,7 @@ import java.io.IOException;
 import problemdomain.*;
 
 /**
- * @author nhamnett
+ * @author Jaeyoung Kim
  *
  */
 public class InputOutputHandler implements Runnable {
@@ -41,7 +41,12 @@ public class InputOutputHandler implements Runnable {
 					AfterAttack afterAttack = (AfterAttack) receive;
 					System.out.println("Received message: " + afterAttack.toString());
 					this.output.getOos().writeObject(afterAttack);
-				}
+				} else if (receive instanceof ReGame) {
+					ReGame reGame = (ReGame) receive;
+					System.out.println("Received message: " + reGame.toString());
+					this.input.getSocket().close();
+					this.output.getOos().writeObject(reGame);
+				} 
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
