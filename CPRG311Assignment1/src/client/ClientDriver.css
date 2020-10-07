@@ -13,7 +13,7 @@
 	-fx-text-fill: white;
 	-fx-font-weight: bold;
 	-fx-font-size: large;
-	-fx-background-color: linear-gradient(#343a40, #343a10);
+	-fx-background-color: #113537;
 	
 }
 
@@ -34,7 +34,7 @@
 }
 
 .text-field {
-	-fx-background-color: #343a40;
+	-fx-background-color: #37505c;
 	-fx-text-fill: white;
 	-fx-background-insets: 0;
 	-fx-padding: 8;
