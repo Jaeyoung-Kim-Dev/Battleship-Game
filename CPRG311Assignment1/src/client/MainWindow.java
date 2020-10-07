@@ -34,6 +34,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -68,7 +69,7 @@ public class MainWindow {
 
 	int totalships = 0; // to calculate all ships on maps
 
-	private boolean myTurn = false;  // user can strike when this value is true.
+	private boolean myTurn = false; // user can strike when this value is true.
 
 	private static final int TILE_SIZE = 40;
 	private static final int MAP_WIDTH = 400;
@@ -98,28 +99,42 @@ public class MainWindow {
 
 		BorderPane root = new BorderPane();
 		// root.setStyle("-fx-background-color: #336699;");
+		root.setTop(titleArea());
 		root.setCenter(createGame());
 		root.setRight(connectArea());
 
 		return root;
 	}
 
+	public Pane titleArea() {
+
+		BorderPane title = new BorderPane();
+		title.setPadding(new Insets(20, 15, 40, 15));
+		// status.setStyle("-fx-background-color: #336699;");
+
+		Text titleText = new Text("Battleship Game");
+		titleText.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 50));
+		titleText.setFill(Color.WHITE);
+
+		title.setCenter(titleText);
+
+		return title;
+	}
+
 	public Pane createGame() {
 
 		BorderPane gameBaord = new BorderPane();
 
-		gameBaord.setTop(statusArea());
-		gameBaord.setCenter(gameMap());
+		BorderPane myBoard = new BorderPane();
+		myBoard.setTop(myStatusArea());
+		myBoard.setCenter(createMyMap());
+		
+		BorderPane enemyBoard = new BorderPane();
+		enemyBoard.setTop(enemyStatusArea());
+		enemyBoard.setCenter(createEnemyMap());
 
-		return gameBaord;
-	}
-
-	public Pane gameMap() {
-
-		BorderPane gameBaord = new BorderPane();
-
-		gameBaord.setLeft(createMyMap());
-		gameBaord.setRight(createEnemyMap());
+		gameBaord.setLeft(myBoard);
+		gameBaord.setRight(enemyBoard);
 
 		return gameBaord;
 	}
@@ -177,7 +192,15 @@ public class MainWindow {
 		buttonDisconnect.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				disconnect();
+				try {
+					QuitGame quitGame = new QuitGame(username, true);
+					objectOutputStream.writeObject(quitGame);
+					disconnect();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
 			}
 		});
 
@@ -260,14 +283,11 @@ public class MainWindow {
 	}
 
 	public void disconnect() {
-		try {			
-			QuitGame quitGame = new QuitGame(username, true);
-			objectOutputStream.writeObject(quitGame);
-			
+		try {
 			objectInputStream.close();
 			objectOutputStream.close();
 
-			// socket.close();
+			socket.close();
 
 			buttonConnect.setDisable(false);
 			buttonDisconnect.setDisable(true);
@@ -329,31 +349,40 @@ public class MainWindow {
 		// this.messageList.getItems().add("msg added");
 	}
 
-	public Pane statusArea() {
+	public Pane myStatusArea() {
 
-		BorderPane status = new BorderPane();
-		status.setPadding(new Insets(50, 50, 15, 15));
+		// BorderPane status = new BorderPane();
+		// status.setPadding(new Insets(50, 50, 15, 15));
 		// status.setStyle("-fx-background-color: #336699;");
 
 		BorderPane myBoard = new BorderPane();
-		BorderPane enemyBoard = new BorderPane();
 
 		Text myBoardTitle = new Text("My Board");
+
+		myBoardTitle.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 30));
+		myBoardTitle.setFill(Color.WHITE);
+		myBoard.setPadding(new Insets(15, 15, 15, 15));
+		myBoard.setCenter(myBoardTitle);
+
+		return myBoard;
+	}
+	
+	public Pane enemyStatusArea() {
+
+		// BorderPane status = new BorderPane();
+		// status.setPadding(new Insets(50, 50, 15, 15));
+		// status.setStyle("-fx-background-color: #336699;");
+
+		BorderPane enemyBoard = new BorderPane();
+
 		Text enemyBoardTitle = new Text("Enemy's Board");
 
-		myBoard.setPadding(new Insets(15, 15, 15, 15));
-		// myBoard.setStyle("-fx-background-color: #336699;");
-		myBoard.setPrefSize(MAP_WIDTH + 30, 50);
+		enemyBoardTitle.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 30));
+		enemyBoardTitle.setFill(Color.WHITE);
+		enemyBoard.setPadding(new Insets(15, 15, 15, 15));
+		enemyBoard.setCenter(enemyBoardTitle);
 
-		myBoard.setTop(myBoardTitle);
-		enemyBoard.setTop(enemyBoardTitle);
-
-		status.setLeft(myBoard);
-		status.setRight(enemyBoard);
-
-		// status.setCenter(text);
-
-		return status;
+		return enemyBoard;
 	}
 
 	// MyMap part begins
@@ -410,9 +439,8 @@ public class MainWindow {
 			for (int x = 0; x < X_TILES; x++) {
 				myGrid[x][y].strike = false;
 				myGrid[x][y].border.setFill(Color.BLACK);
-				// enemyGrid[x][y].strike = false;
-				// enemyGrid[x][y].isOpen = false;
-				// enemyGrid[x][y].border.setFill(Color.BLACK);
+				enemyGrid[x][y].isOpen = false;
+				enemyGrid[x][y].border.setFill(Color.BLACK);
 			}
 		}
 
@@ -513,10 +541,14 @@ public class MainWindow {
 		private Rectangle border = new Rectangle(TILE_SIZE - 2, TILE_SIZE - 2);
 		private Text text = new Text();
 
+		
+		
+		
 		public EnemyTile(int x, int y) {
 			this.x = x;
 			this.y = y;
 
+			
 			border.setStroke(Color.LIGHTGRAY);
 
 			getChildren().addAll(border, text);
@@ -525,33 +557,26 @@ public class MainWindow {
 			setTranslateY(this.y * TILE_SIZE);
 
 			setOnMouseClicked(e -> open());
-			setOnMouseMoved(e -> hover());
-			// setOnMouseExitedTarget(e -> exit());
-		}
-
+			
+			border.setOnMouseEntered( e -> border.setStroke(Color.RED));
+			border.setOnMouseExited(e -> border.setStroke(Color.LIGHTGRAY));
+		}		
+		
 		public void open() {
 			// return immediately if it's already open or not my turn.
 			if (isOpen || !myTurn)
 				return;
 
-			Battle battle = new Battle(username, x, y);
-
 			try {
-				// Send Message to the server.
-				objectOutputStream.writeObject(battle);
-				objectOutputStream.reset(); // TODO: necessary?
-				// If it's sent successfully, add message to chat list.
-				addMessage(battle.toString());
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				Battle battle = new Battle(username, x, y);
+				objectOutputStream.writeObject(battle);				
+			} catch (IOException e) {				
 				e.printStackTrace();
-
 				addMessage("Unable to attack.");
 			}
 
 			if (strike) {
-				border.setFill(Color.RED);
-				// Create a Message object.
+				border.setFill(Color.RED);				
 			} else {
 				border.setFill(null);
 			}
@@ -564,18 +589,15 @@ public class MainWindow {
 			border.setStroke(Color.RED);
 		}
 
-		public void exit() {
-			border.setStroke(Color.LIGHTGRAY);
-		}
 	}
-
+	
 	public void battle(int x, int y) {
 		boolean _strike = myGrid[x][y].strike;
 
 		if (_strike) {
 			myGrid[x][y].border.setFill(Color.RED);
 			totalships--;
-			addMessage(totalships + "ships left.");
+			addMessage("You have " + totalships + " ships left.");
 		} else {
 			myGrid[x][y].border.setFill(null);
 		}
@@ -601,8 +623,10 @@ public class MainWindow {
 	public void afterAttack(int x, int y, boolean strike, int totalships) {
 		if (strike) {
 			enemyGrid[x][y].border.setFill(Color.RED);
+			addMessage("Strike!");
 		} else {
 			enemyGrid[x][y].border.setFill(null);
+			addMessage("Missed.");
 		}
 		if (totalships > 0)
 			addMessage("Waiting for opponent to strike.");
@@ -611,23 +635,35 @@ public class MainWindow {
 	}
 
 	public void reGame(String username, String ip, int port) {
-		try {			
-			int _reGame = JOptionPane.showConfirmDialog(null, "Do you want to play a new game?", "Regame?",
-					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-			if (_reGame == 0) {
+		int _reGame = JOptionPane.showConfirmDialog(null, "Do you want to play a new game?", "Play again?",
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+		if (_reGame == 0) {
+			try {
 				addMessage("Let's play again!");
-			boolean stopGame = Boolean.parseBoolean(Integer.toString(_reGame));
+				boolean stopGame = Boolean.parseBoolean(Integer.toString(_reGame));
 
-			ReGame reGame = new ReGame(username, ip, port, stopGame);
-			objectOutputStream.writeObject(reGame);
-			// objectOutputStream.reset(); // TODO: necessary?
-			addMessage(reGame.toString());
-			connect(ip, port);
+				ReGame reGame = new ReGame(username, ip, port, stopGame);
+
+				objectOutputStream.writeObject(reGame);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			addMessage("Unable to join a new game.");
+			// objectOutputStream.reset(); // TODO: necessary?
+			// addMessage(reGame.toString());
+			disconnect();
+			connect(ip, port);
 		}
 	}
+
+	public void enemyDisconnected() {
+		int _reGame = JOptionPane.showConfirmDialog(null,
+				"The enemy is disconnect the game. Do you want to play again?", "Play again?",
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+		if (_reGame == 0) {
+			// disconnect();
+			connect(ip, port);
+		}
+	}
+
 }

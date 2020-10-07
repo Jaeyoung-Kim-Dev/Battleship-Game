@@ -52,7 +52,7 @@ public class InputOutputHandler implements Runnable {
 				} else if (receive instanceof QuitGame) {
 					QuitGame quitGame = (QuitGame) receive;
 					serverGUI.addMessage(quitGame.toString());
-					this.input.getSocket().close();					
+					//this.input.getSocket().close();					
 					this.output.getOos().writeObject(quitGame);
 					//this.output.getSocket().close();			
 				}
