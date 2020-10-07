@@ -25,6 +25,7 @@ public class ClientDriver extends Application  {
 		scene.getStylesheets().add(MainWindow.class.getResource("ClientDriver.css").toExternalForm());
 		primaryStage.setTitle("Battleship Game");
 		primaryStage.setScene(scene);
+		primaryStage.setResizable(false);
 		primaryStage.show();
 		
 		primaryStage.setOnCloseRequest((e) -> {

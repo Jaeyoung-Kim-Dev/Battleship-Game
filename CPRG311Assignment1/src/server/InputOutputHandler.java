@@ -26,6 +26,10 @@ public class InputOutputHandler implements Runnable {
 	public void run() {
 		while (!this.input.getSocket().isClosed() && !this.output.getSocket().isClosed()) {
 			try {
+				boolean a = this.input.getSocket().isClosed();
+				System.out.println(a);
+				boolean b = this.output.getSocket().isClosed();
+				System.out.println(b);
 				Object receive = (Object) this.input.getOis().readObject();
 				if (receive instanceof StartGame) {
 					StartGame startGame = (StartGame) receive;
@@ -54,7 +58,8 @@ public class InputOutputHandler implements Runnable {
 					serverGUI.addMessage(quitGame.toString());
 					//this.input.getSocket().close();					
 					this.output.getOos().writeObject(quitGame);
-					//this.output.getSocket().close();			
+					//this.output.getSocket().close();
+					//소켓을 여기서 닫아야 while문을 빠져나와서 EOF예외처리에서 빠져나올수 있는것인가...?
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
