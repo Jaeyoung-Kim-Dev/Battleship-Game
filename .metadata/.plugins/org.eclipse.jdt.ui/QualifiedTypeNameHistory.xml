@@ -10,7 +10,6 @@
 <fullyQualifiedTypeName name="application.Map"/>
 <fullyQualifiedTypeName name="gui.Map"/>
 <fullyQualifiedTypeName name="javafx.scene.layout.BorderPane"/>
-<fullyQualifiedTypeName name="javafx.scene.layout.Pane"/>
 <fullyQualifiedTypeName name="javafx.geometry.Pos"/>
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="javafx.geometry.Insets"/>
@@ -26,4 +25,8 @@
 <fullyQualifiedTypeName name="problemdomain.ReGame"/>
 <fullyQualifiedTypeName name="problemdomain.ExitGame"/>
 <fullyQualifiedTypeName name="problemdomain.QuitGame"/>
+<fullyQualifiedTypeName name="javafx.scene.layout.Pane"/>
+<fullyQualifiedTypeName name="javafx.scene.layout.HBox"/>
+<fullyQualifiedTypeName name="javafx.scene.layout.Priority"/>
+<fullyQualifiedTypeName name="java.lang.System"/>
 </qualifiedTypeNameHistroy>

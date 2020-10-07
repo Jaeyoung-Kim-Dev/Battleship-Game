@@ -48,14 +48,15 @@ public class ServerHandler implements Runnable {
 					ReGame reGame = (ReGame) receive;
 					if (reGame.isStopGame()) {
 						this.mainWindow.disconnect();
-						server.close();
+						//server.close();
 					} else
 						this.mainWindow.reGame(reGame.getUsername(), reGame.getIp(), reGame.getPort());
 				} else if (receive instanceof QuitGame) {
 					QuitGame quitGame = (QuitGame) receive;
 					if (quitGame.isQuitGame()) {
-						this.mainWindow.disconnect();
-					server.close();
+						this.mainWindow.disconnect();						
+						//server.close();
+						//this.mainWindow.enemyDisconnected();
 					}
 				}
 			} catch (ClassNotFoundException e) {

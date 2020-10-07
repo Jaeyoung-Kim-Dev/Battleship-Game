@@ -5,7 +5,6 @@ import java.net.*;
 import java.util.*;
 
 import javafx.application.Application;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 import problemdomain.*;
 
@@ -32,7 +31,7 @@ public class ServerDriver extends Application  {
 			try {
 				Socket client = listener.accept();
 
-				System.out.println("Client connected.");
+				serverGUI.addMessage("Client connected.");
 
 				InputStream inputStream = client.getInputStream();
 				ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
