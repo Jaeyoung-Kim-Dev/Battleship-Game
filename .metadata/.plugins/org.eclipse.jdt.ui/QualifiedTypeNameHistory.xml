@@ -29,4 +29,7 @@
 <fullyQualifiedTypeName name="javafx.scene.layout.HBox"/>
 <fullyQualifiedTypeName name="javafx.scene.layout.Priority"/>
 <fullyQualifiedTypeName name="java.lang.System"/>
+<fullyQualifiedTypeName name="javafx.beans.binding.Bindings"/>
+<fullyQualifiedTypeName name="javafx.geometry.HPos"/>
+<fullyQualifiedTypeName name="javafx.scene.layout.ColumnConstraints"/>
 </qualifiedTypeNameHistroy>
