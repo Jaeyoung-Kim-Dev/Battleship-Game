@@ -8,12 +8,22 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import problemdomain.*;
 
+/**
+ * Includes main method for Battleship game server.
+ * 
+ * @author Jaeyoung Kim
+ * @version 1.0, October 7, 2020
+ *
+ */
 public class ServerDriver extends Application  {
 
 	public static void main(String[] args) {		
 		launch(args);		
 	}
 
+	/**
+	 * start method for JavaFX
+	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		

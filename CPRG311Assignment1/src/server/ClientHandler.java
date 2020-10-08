@@ -4,11 +4,15 @@
 package server;
 
 import java.io.IOException;
+import java.net.SocketException;
 
 import problemdomain.*;
 
+
 /**
- * @author nhamnett
+ * Start InputOutputHandler threads for both users.
+ * 
+ * @author Jaeyoung Kim
  *
  */
 public class ClientHandler implements Runnable {
@@ -16,12 +20,22 @@ public class ClientHandler implements Runnable {
 	private ClientConnection connection2;
 	private ServerGUI serverGUI;
 
+	/**
+	 * User-defined constructor for ClientHandler.
+	 * 
+	 * @param connection1 connection for the first user.
+	 * @param connection2 connection for the second user.
+	 * @param serverGUI GUI for server
+	 */
 	public ClientHandler(ClientConnection connection1, ClientConnection connection2, ServerGUI serverGUI) {
 		this.connection1 = connection1;
 		this.connection2 = connection2;
 		this.serverGUI = serverGUI;
 	}
 
+	/**
+	 * run method for thread
+	 */
 	@Override
 	public void run() {
 
@@ -46,15 +60,15 @@ public class ClientHandler implements Runnable {
 			connection1.getOos().writeObject(firstPlayer);
 			connection2.getOos().writeObject(secondPlayer);
 		} catch (IOException e1) {
-			e1.printStackTrace();
+			e1.printStackTrace();			
 		}
 
 		try {
 			thread1.join();
 			thread2.join();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+			e.printStackTrace();			
+		} 
 	}
 
 }

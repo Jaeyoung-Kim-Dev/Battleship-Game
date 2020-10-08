@@ -19,8 +19,11 @@ import javax.swing.*;
 
 import problemdomain.Message;
 
+
 /**
- * @author nhamnett
+ * Serveer GUI
+ * 
+ * @author Jaeyoung Kim
  *
  */
 public class ServerGUI {
@@ -31,6 +34,9 @@ public class ServerGUI {
 	
 	private Date date;
 
+	/**
+	 * Server GUI Frame
+	 */
 	public ServerGUI() {
 		this.frame = new JFrame("Battleship Game Server");
 		
@@ -38,18 +44,23 @@ public class ServerGUI {
 		this.frame.setLayout(new BorderLayout());
 		this.frame.setSize(400, 800);
 		
-		JPanel chatPanel = this.createChatPanel();
+		JPanel chatPanel = this.createMessagePanel();
 		this.frame.add(chatPanel, BorderLayout.CENTER);
 		
-		JPanel connectionPanel = this.createConnectionPanel();
+		JPanel connectionPanel = this.createExitPanel();
 		this.frame.add(connectionPanel, BorderLayout.SOUTH);
 	}
 	
-	private JPanel createChatPanel() {
+	/**
+	 * create message panel
+	 * 
+	 * @return message panel
+	 */
+	private JPanel createMessagePanel() {
 		JPanel panel = new JPanel(new BorderLayout());
 		
 		this.chatListModel = new DefaultListModel<String>();
-		this.chatList = new JList(this.chatListModel);
+		this.chatList = new JList<String>(this.chatListModel);
 		
 		JScrollPane scrollPane = new JScrollPane(this.chatList);
 		
@@ -58,9 +69,13 @@ public class ServerGUI {
 		return panel;
 	}
 	
-	private JPanel createConnectionPanel() {
-		JPanel panel = new JPanel(new GridLayout(1, 2));
-			
+	/**
+	 * create Exit Panel
+	 * 
+	 * @return Exit Panel
+	 */
+	private JPanel createExitPanel() {
+		JPanel panel = new JPanel(new GridLayout(1, 2));			
 		
 		JButton exitButton = new JButton("Exit");
 		
@@ -75,7 +90,7 @@ public class ServerGUI {
 	
 	/**
 	 * Add a message to the JList.
-	 * @param message
+	 * @param message a user's message
 	 */
 	public void addMessage(String message) {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -84,6 +99,9 @@ public class ServerGUI {
 		this.chatListModel.addElement(currentDateTime+message);
 	}
 	
+	/**
+	 * Display the server GUI frame
+	 */
 	public void display() {
 		this.frame.setVisible(true);		
 	}
