@@ -63,8 +63,8 @@ public class InputOutputHandler implements Runnable {
 					//this.output.getSocket().close();			
 				} else if (receive instanceof QuitGame) {
 					QuitGame quitGame = (QuitGame) receive;
-					serverGUI.addMessage(quitGame.toString());
-					//this.input.getSocket().close();					
+					serverGUI.addMessage(quitGame.toString());					
+					this.input.getSocket().close();	
 					this.output.getOos().writeObject(quitGame);
 					//this.output.getSocket().close();
 					//소켓을 여기서 닫아야 while문을 빠져나와서 EOF예외처리에서 빠져나올수 있는것인가...?

@@ -96,9 +96,11 @@
 		<item key="FatJarPackageWizardPage.ANTSCRIPT_SAVE" value="false"/>
 		<item key="FatJarPackageWizardPage.ANTSCRIPT_LOCATION" value="C:\Users\kornk\GitHub\cprg311A1"/>
 		<item key="FatJarPackageWizardPage.LIBRARY_HANDLING" value="1"/>
-		<item key="FatJarPackageWizardPage.LAUNCH_CONFIGURATION_SELECTION_NAME" value="ServerDriver - CPRG311Assignment1"/>
-		<item key="FatJarPackageWizardPage.DESTINATION_PATH_SELECTION" value="C:\Users\kornk\OneDrive\Desktop\server.jar"/>
+		<item key="FatJarPackageWizardPage.LAUNCH_CONFIGURATION_SELECTION_NAME" value="ClientDriver (1) - CPRG311Assignment1"/>
+		<item key="FatJarPackageWizardPage.DESTINATION_PATH_SELECTION" value="C:\Users\kornk\OneDrive\Desktop\ClientDriver.jar"/>
 		<list key="FatJarPackageWizardPage.DESTINATION_NAMES_ID">
+			<item value="C:\Users\kornk\OneDrive\Desktop\ClientDriver.jar"/>
+			<item value="C:\Users\kornk\OneDrive\Desktop\ServerDriver.jar"/>
 			<item value="C:\Users\kornk\OneDrive\Desktop\server.jar"/>
 			<item value="C:\Users\kornk\OneDrive\Desktop\client.jar"/>
 		</list>
