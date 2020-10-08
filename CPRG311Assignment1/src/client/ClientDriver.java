@@ -5,10 +5,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- * Includes main method for Battleship game.
+ * Includes main method for Battleship game client.
  * 
  * @author Jaeyoung Kim
- * @version 1.0, Sep 30, 2020
+ * @version 1.0, October 7, 2020
  */
 public class ClientDriver extends Application  {
 

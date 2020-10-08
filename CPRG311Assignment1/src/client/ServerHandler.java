@@ -8,6 +8,9 @@ import java.io.*;
 import java.net.*;
 
 /**
+ * 
+ * Handler serialized data from the server
+ * 
  * @author Jaeyoung Kim
  *
  */
@@ -42,7 +45,7 @@ public class ServerHandler implements Runnable {
 					AfterAttack afterAttack = (AfterAttack) receive;
 					// if(afterAttack.getTotalships() == 0)
 					// this.mainWindow.addMessage(afterAttack.toString());
-					this.mainWindow.afterAttack(afterAttack.getX(), afterAttack.getY(), afterAttack.isStrike(),
+					this.mainWindow.afterAttack(afterAttack.getUsername(), afterAttack.getX(), afterAttack.getY(), afterAttack.isStrike(), afterAttack.getStrikeInitial(),
 							afterAttack.getTotalships());
 				} else if (receive instanceof ReGame) {
 					ReGame reGame = (ReGame) receive;
@@ -63,7 +66,7 @@ public class ServerHandler implements Runnable {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
-			}
+			} 
 		}
 	}
 

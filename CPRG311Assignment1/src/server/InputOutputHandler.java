@@ -8,6 +8,8 @@ import java.io.IOException;
 import problemdomain.*;
 
 /**
+ * Handler serialized data from the client
+ * 
  * @author Jaeyoung Kim
  *
  */
@@ -16,20 +18,26 @@ public class InputOutputHandler implements Runnable {
 	private ClientConnection output;
 	private ServerGUI serverGUI;
 
+	/**
+	 * User-defined constructor for InputOutputHandler.
+	 * 
+	 * @param input a user ClientConnection
+	 * @param output enemy ClientConnection
+	 * @param serverGUI GUI for server
+	 */
 	public InputOutputHandler(ClientConnection input, ClientConnection output, ServerGUI serverGUI) {
 		this.input = input;
 		this.output = output;
 		this.serverGUI = serverGUI;
 	}
 
+	/**
+	 * run method
+	 */
 	@Override
 	public void run() {
 		while (!this.input.getSocket().isClosed() && !this.output.getSocket().isClosed()) {
 			try {
-				boolean a = this.input.getSocket().isClosed();
-				System.out.println(a);
-				boolean b = this.output.getSocket().isClosed();
-				System.out.println(b);
 				Object receive = (Object) this.input.getOis().readObject();
 				if (receive instanceof StartGame) {
 					StartGame startGame = (StartGame) receive;
@@ -61,10 +69,10 @@ public class InputOutputHandler implements Runnable {
 					//this.output.getSocket().close();
 					//소켓을 여기서 닫아야 while문을 빠져나와서 EOF예외처리에서 빠져나올수 있는것인가...?
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+				e.printStackTrace();				
+			} catch (IOException e) {
+				e.printStackTrace();		
 			}
 		}
 	}
