@@ -33,6 +33,7 @@ public class MyTile extends StackPane {
 		this.tileSize = tileSize;
 
 		rectangle = new Rectangle(tileSize - 2, tileSize - 2);		
+		rectangle.setFill(null);
 		rectangle.setStroke(Color.LIGHTGRAY);
 
 		initial = new Text();

@@ -279,7 +279,8 @@ public class MainWindow {
 	public Pane chatArea() {
 
 		BorderPane chat = new BorderPane();
-
+		chat.setPadding(new Insets(15, 15, 15, 15));
+		
 		chat.setCenter(chatList());
 		chat.setBottom(typeArea());
 
@@ -641,6 +642,7 @@ public class MainWindow {
 	 * Create my map on the left of the game pane.
 	 * 
 	 * @return my map pane.
+	 * @throws InterruptedException 
 	 */
 	public Pane createMyMap() {
 		BorderPane root = new BorderPane();
@@ -654,7 +656,7 @@ public class MainWindow {
 				MyTile tile = new MyTile(x, y, TILE_SIZE);
 
 				myGrid[x][y] = tile;
-				titles.getChildren().add(tile);
+				titles.getChildren().add(tile);				
 			}
 		}
 		root.setCenter(titles);
@@ -673,14 +675,16 @@ public class MainWindow {
 		for (int y = 0; y < Y_TILES; y++) {
 			for (int x = 0; x < X_TILES; x++) {
 				myGrid[x][y].setStrike(false);
-				myGrid[x][y].getRectangle().setFill(Color.BLACK);
+				myGrid[x][y].getRectangle().setFill(Color.DARKBLUE);
 				myGrid[x][y].getInitial().setText(null);
-				;
-				// myGrid[x][y].getInitial().setFill(Color.RED);
 				enemyGrid[x][y].isOpen = false;
-				enemyGrid[x][y].border.setFill(Color.BLACK);
+				enemyGrid[x][y].rectangle.setFill(Color.DARKBLUE);
 				enemyGrid[x][y].initial.setText(null);
-				;
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 
@@ -741,6 +745,12 @@ public class MainWindow {
 					myGrid[start_x + i][start_y].getInitial()
 							.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
 					// myGrid[start_x + i][start_y].getInitial().setVisible(true);
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 				shipPlaced = true;
 			} else if ((!alreadyExist && !vertical)) {
@@ -753,6 +763,17 @@ public class MainWindow {
 					myGrid[start_x][start_y + i].getInitial()
 							.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
 					// myGrid[start_x][start_y + i].getInitial().setVisible(true);
+					try {
+						Thread.sleep(150);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				try {
+					Thread.sleep(300);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 				shipPlaced = true;
 			}
@@ -808,24 +829,25 @@ public class MainWindow {
 		private boolean strike;
 		private boolean isOpen = false;
 
-		private Rectangle border = new Rectangle(TILE_SIZE - 2, TILE_SIZE - 2);
+		private Rectangle rectangle = new Rectangle(TILE_SIZE - 2, TILE_SIZE - 2);
 		private Text initial = new Text();
 
 		public EnemyTile(int x, int y) {
 			this.x = x;
 			this.y = y;
 
-			border.setStroke(Color.LIGHTGRAY);
+			rectangle.setStroke(Color.LIGHTGRAY);
+			rectangle.setFill(null);
 
-			getChildren().addAll(border, initial);
+			getChildren().addAll(rectangle, initial);
 
 			setTranslateX(this.x * TILE_SIZE);
 			setTranslateY(this.y * TILE_SIZE);
 
 			setOnMouseClicked(e -> open());
 
-			border.setOnMouseEntered(e -> border.setStroke(Color.RED));
-			border.setOnMouseExited(e -> border.setStroke(Color.LIGHTGRAY));
+			rectangle.setOnMouseEntered(e -> rectangle.setStroke(Color.RED));
+			rectangle.setOnMouseExited(e -> rectangle.setStroke(Color.LIGHTGRAY));
 		}
 
 		public void open() {
@@ -842,9 +864,9 @@ public class MainWindow {
 			}
 
 			if (strike) {
-				border.setFill(Color.RED);
+				rectangle.setFill(Color.RED);
 			} else {
-				border.setFill(null);
+				rectangle.setFill(null);
 			}
 
 			isOpen = true;
@@ -899,13 +921,13 @@ public class MainWindow {
 	 */
 	public void afterAttack(String username, int x, int y, boolean strike, String inital, int totalships) {
 		if (strike) {
-			enemyGrid[x][y].border.setFill(Color.RED);
+			enemyGrid[x][y].rectangle.setFill(Color.RED);
 			enemyGrid[x][y].initial.setText(inital);
 			enemyGrid[x][y].initial.setFill(Color.WHITE);
 			enemyGrid[x][y].initial.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
 			addMessage("Strike!");
 		} else {
-			enemyGrid[x][y].border.setFill(null);
+			enemyGrid[x][y].rectangle.setFill(null);
 			addMessage("Missed.");
 		}
 		if (totalships > 0)
