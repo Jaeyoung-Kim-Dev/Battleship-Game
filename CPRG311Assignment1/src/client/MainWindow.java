@@ -675,13 +675,22 @@ public class MainWindow {
 		for (int y = 0; y < Y_TILES; y++) {
 			for (int x = 0; x < X_TILES; x++) {
 				myGrid[x][y].setStrike(false);
-				myGrid[x][y].getRectangle().setFill(Color.DARKBLUE);
+				myGrid[x][y].getRectangle().setFill(null);
 				myGrid[x][y].getInitial().setText(null);
 				enemyGrid[x][y].isOpen = false;
-				enemyGrid[x][y].rectangle.setFill(Color.DARKBLUE);
+				enemyGrid[x][y].rectangle.setFill(null);
 				enemyGrid[x][y].initial.setText(null);
+			}
+		}
+		
+		
+		// animation: fill the DARKBLUE color on tiles
+		for (int y = 0; y < Y_TILES; y++) {
+			for (int x = 0; x < X_TILES; x++) {
+				myGrid[x][y].getRectangle().setFill(Color.DARKBLUE);
+				enemyGrid[x][y].rectangle.setFill(Color.DARKBLUE);
 				try {
-					Thread.sleep(10);
+					Thread.sleep((150 - 10 * y - x) / 5);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -739,8 +748,7 @@ public class MainWindow {
 				for (int i = 0; i < shipSize; i++) {
 					myGrid[start_x + i][start_y].setStrike(true);
 					myGrid[start_x + i][start_y].getRectangle().setFill(Color.YELLOW);
-					myGrid[start_x + i][start_y].getInitial().setText(ship.getInitial());
-					;
+					myGrid[start_x + i][start_y].getInitial().setText(ship.getInitial());					
 					myGrid[start_x + i][start_y].getInitial().setFill(Color.RED);
 					myGrid[start_x + i][start_y].getInitial()
 							.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
