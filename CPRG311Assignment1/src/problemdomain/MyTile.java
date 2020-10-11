@@ -3,6 +3,7 @@ package problemdomain;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Text;
 
 /**
@@ -35,6 +36,7 @@ public class MyTile extends StackPane {
 		rectangle = new Rectangle(tileSize - 2, tileSize - 2);		
 		rectangle.setFill(null);
 		rectangle.setStroke(Color.LIGHTGRAY);
+		rectangle.setStrokeType(StrokeType.INSIDE);
 
 		initial = new Text();
 		

@@ -12,42 +12,18 @@ import java.util.Optional;
 
 import javax.swing.JOptionPane;
 
-import javafx.beans.binding.Bindings;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
+import javafx.geometry.*;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
+import javafx.scene.shape.StrokeType;
+import javafx.scene.text.*;
+import javafx.stage.*;
 import problemdomain.*;
 
 public class MainWindow {
@@ -121,13 +97,12 @@ public class MainWindow {
 	 * 
 	 */
 	private GridPane myScoreboard;
-	
+
 	/**
 	 * 
 	 */
 	private GridPane enemyScoreboard;
-	
-	
+
 	/**
 	 * Total ships count to calculate all ships on maps.
 	 */
@@ -207,6 +182,7 @@ public class MainWindow {
 		root.setTop(titleArea());
 		root.setCenter(createGame());
 		root.setRight(connectArea());
+		root.setBottom(footerArea());
 
 		return root;
 	}
@@ -222,7 +198,7 @@ public class MainWindow {
 		title.setPadding(new Insets(20, 15, 40, 15));
 
 		Text titleText = new Text("BATTLESHIP GAME");
-		titleText.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 50));
+		titleText.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 60));
 		titleText.setFill(Color.WHITE);
 
 		title.setCenter(titleText);
@@ -230,6 +206,26 @@ public class MainWindow {
 		return title;
 	}
 
+	/**
+	 * Pane of title area
+	 * 
+	 * @return title pane
+	 */
+	public Pane footerArea() {
+
+		BorderPane footer = new BorderPane();
+		footer.setPadding(new Insets(15, 15, 15, 15));
+
+		Text titleText = new Text("Designed and Developed by JAEYOUNG KIM"); //"DESIGNED & DEVELOPED BY JAEYOUNG KIM");
+		titleText.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+		titleText.setFill(Color.WHITE);
+		
+		footer.setCenter(titleText);
+
+		return footer;
+	}
+	
+	
 	/**
 	 * Pane of creating game
 	 * 
@@ -280,7 +276,7 @@ public class MainWindow {
 
 		BorderPane chat = new BorderPane();
 		chat.setPadding(new Insets(15, 15, 15, 15));
-		
+
 		chat.setCenter(chatList());
 		chat.setBottom(typeArea());
 
@@ -432,23 +428,23 @@ public class MainWindow {
 	 */
 	public void disconnect() {
 
-		//try {
-			//objectInputStream.close();
-			//objectOutputStream.close();
-			
-			//socket.close();
+		// try {
+		// objectInputStream.close();
+		// objectOutputStream.close();
 
-			buttonConnect.setDisable(false);
-			buttonDisconnect.setDisable(true);
+		// socket.close();
 
-			addMessage("Disconnected.");
+		buttonConnect.setDisable(false);
+		buttonDisconnect.setDisable(true);
 
-		//} catch (IOException e) {
-			//e.printStackTrace();
-			//addMessage("Unable to disconnect.");
-		//} catch (NullPointerException e) {
-			//System.exit(0);
-		//}
+		addMessage("Disconnected.");
+
+		// } catch (IOException e) {
+		// e.printStackTrace();
+		// addMessage("Unable to disconnect.");
+		// } catch (NullPointerException e) {
+		// System.exit(0);
+		// }
 	}
 
 	/**
@@ -573,7 +569,6 @@ public class MainWindow {
 		ColumnConstraints col5 = new ColumnConstraints();
 		col5.setPercentWidth(20);
 		myScoreboard.getColumnConstraints().addAll(col1, col2, col3, col4, col5);
-		
 
 		for (int i = 0; i < ships.size(); i++) {
 			Text shipName = new Text(ships.get(i).getName());
@@ -590,10 +585,10 @@ public class MainWindow {
 			myScoreboard.add(shipSize, i, 1);
 			GridPane.setHalignment(shipSize, HPos.CENTER);
 		}
-		
+
 		return myScoreboard;
 	}
-	
+
 	/**
 	 * A user score board.
 	 * 
@@ -617,7 +612,6 @@ public class MainWindow {
 		ColumnConstraints col5 = new ColumnConstraints();
 		col5.setPercentWidth(20);
 		enemyScoreboard.getColumnConstraints().addAll(col1, col2, col3, col4, col5);
-		
 
 		for (int i = 0; i < ships.size(); i++) {
 			Text shipName = new Text(ships.get(i).getName());
@@ -634,7 +628,7 @@ public class MainWindow {
 			enemyScoreboard.add(shipSize, i, 1);
 			GridPane.setHalignment(shipSize, HPos.CENTER);
 		}
-		
+
 		return enemyScoreboard;
 	}
 
@@ -642,7 +636,7 @@ public class MainWindow {
 	 * Create my map on the left of the game pane.
 	 * 
 	 * @return my map pane.
-	 * @throws InterruptedException 
+	 * @throws InterruptedException
 	 */
 	public Pane createMyMap() {
 		BorderPane root = new BorderPane();
@@ -656,7 +650,7 @@ public class MainWindow {
 				MyTile tile = new MyTile(x, y, TILE_SIZE);
 
 				myGrid[x][y] = tile;
-				titles.getChildren().add(tile);				
+				titles.getChildren().add(tile);
 			}
 		}
 		root.setCenter(titles);
@@ -682,8 +676,7 @@ public class MainWindow {
 				enemyGrid[x][y].initial.setText(null);
 			}
 		}
-		
-		
+
 		// animation: fill the DARKBLUE color on tiles
 		for (int y = 0; y < Y_TILES; y++) {
 			for (int x = 0; x < X_TILES; x++) {
@@ -748,7 +741,7 @@ public class MainWindow {
 				for (int i = 0; i < shipSize; i++) {
 					myGrid[start_x + i][start_y].setStrike(true);
 					myGrid[start_x + i][start_y].getRectangle().setFill(Color.YELLOW);
-					myGrid[start_x + i][start_y].getInitial().setText(ship.getInitial());					
+					myGrid[start_x + i][start_y].getInitial().setText(ship.getInitial());
 					myGrid[start_x + i][start_y].getInitial().setFill(Color.RED);
 					myGrid[start_x + i][start_y].getInitial()
 							.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
@@ -845,6 +838,7 @@ public class MainWindow {
 			this.y = y;
 
 			rectangle.setStroke(Color.LIGHTGRAY);
+			rectangle.setStrokeType(StrokeType.INSIDE);
 			rectangle.setFill(null);
 
 			getChildren().addAll(rectangle, initial);
@@ -854,8 +848,28 @@ public class MainWindow {
 
 			setOnMouseClicked(e -> open());
 
-			rectangle.setOnMouseEntered(e -> rectangle.setStroke(Color.RED));
-			rectangle.setOnMouseExited(e -> rectangle.setStroke(Color.LIGHTGRAY));
+			//if (myTurn) {
+				rectangle.setOnMouseEntered(e -> {
+					rectangle.setStroke(Color.RED);
+					rectangle.setStrokeWidth(5);
+					try {						
+						Aim aim = new Aim(true, x, y);
+						objectOutputStream.writeObject(aim);
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				});
+				rectangle.setOnMouseExited(e -> {
+					rectangle.setStroke(Color.LIGHTGRAY);
+					rectangle.setStrokeWidth(1);					
+					try {						
+						Aim aim = new Aim(false, x, y);
+						objectOutputStream.writeObject(aim);
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				});
+			//}
 		}
 
 		public void open() {
@@ -880,10 +894,29 @@ public class MainWindow {
 			isOpen = true;
 			myTurn = false;
 		}
+
 	}
 
 	/**
-	 * a enemy attack the user attack 
+	 * 
+	 * 
+	 * @param aim
+	 * @param x
+	 * @param y
+	 */
+	public void aim(boolean aim, int x, int y) {
+
+		if (aim) {
+			myGrid[x][y].getRectangle().setStroke(Color.RED);
+			myGrid[x][y].getRectangle().setStrokeWidth(5);
+		} else {
+			myGrid[x][y].getRectangle().setStroke(Color.LIGHTGRAY);
+			myGrid[x][y].getRectangle().setStrokeWidth(1);
+		}
+	}
+
+	/**
+	 * a enemy attack the user attack
 	 * 
 	 * @param x x-coordinate
 	 * @param y y-coordinate
@@ -894,7 +927,7 @@ public class MainWindow {
 		if (_strike) {
 			myGrid[x][y].getRectangle().setFill(Color.RED);
 			myGrid[x][y].getInitial().setFill(Color.WHITE);
-			
+
 			totalships--;
 			addMessage("You have " + totalships + " ships left.");
 		} else {

@@ -32,4 +32,5 @@
 <fullyQualifiedTypeName name="javafx.beans.binding.Bindings"/>
 <fullyQualifiedTypeName name="javafx.geometry.HPos"/>
 <fullyQualifiedTypeName name="javafx.scene.layout.ColumnConstraints"/>
+<fullyQualifiedTypeName name="javafx.scene.shape.StrokeType"/>
 </qualifiedTypeNameHistroy>
