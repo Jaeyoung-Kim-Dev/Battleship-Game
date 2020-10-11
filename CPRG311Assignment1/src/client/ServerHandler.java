@@ -38,6 +38,9 @@ public class ServerHandler implements Runnable {
 				} else if (receive instanceof Message) {
 					receive = (Message) receive;
 					this.mainWindow.addMessage(receive.toString());
+				} else if (receive instanceof Aim) {
+					Aim aim = (Aim) receive;
+					this.mainWindow.aim(aim.isAim() ,aim.getX(), aim.getY());
 				} else if (receive instanceof Battle) {
 					Battle battle = (Battle) receive;
 					this.mainWindow.battle(battle.getX(), battle.getY());

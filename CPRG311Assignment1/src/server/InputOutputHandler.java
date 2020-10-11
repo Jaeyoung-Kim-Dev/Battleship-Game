@@ -47,7 +47,10 @@ public class InputOutputHandler implements Runnable {
 					Message message = (Message) receive;
 					serverGUI.addMessage(message.toString());
 					this.output.getOos().writeObject(message);
-				} else if (receive instanceof Battle) {
+				} else if (receive instanceof Aim) {
+					Aim aim = (Aim) receive;					
+					this.output.getOos().writeObject(aim);
+				}else if (receive instanceof Battle) {
 					Battle battle = (Battle) receive;
 					serverGUI.addMessage(battle.toString());
 					this.output.getOos().writeObject(battle);
