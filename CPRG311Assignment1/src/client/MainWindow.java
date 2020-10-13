@@ -18,6 +18,7 @@ import javafx.geometry.*;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -198,9 +199,20 @@ public class MainWindow {
 		title.setPadding(new Insets(20, 15, 40, 15));
 
 		Text titleText = new Text("BATTLESHIP GAME");
+		
+		titleText.setCache(true);
+        titleText.setFill(Color.WHITE);
+        titleText.setFont(Font.font("verdana", FontWeight.BOLD, 70));
+        DropShadow ds=new DropShadow();
+        ds.setOffsetX(7.0);
+        ds.setOffsetY(7.0);
+        ds.setColor(Color.NAVY);
+        titleText.setEffect(ds);
+		
+		/*
 		titleText.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 60));
 		titleText.setFill(Color.WHITE);
-
+*/
 		title.setCenter(titleText);
 
 		return title;
@@ -219,6 +231,12 @@ public class MainWindow {
 		Text titleText = new Text("Designed and Developed by JAEYOUNG KIM"); //"DESIGNED & DEVELOPED BY JAEYOUNG KIM");
 		titleText.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
 		titleText.setFill(Color.WHITE);
+		DropShadow ds=new DropShadow();
+        ds.setOffsetX(4.0);
+        ds.setOffsetY(4.0);
+        ds.setColor(Color.NAVY);
+        titleText.setEffect(ds);
+		
 		
 		footer.setCenter(titleText);
 
@@ -851,7 +869,7 @@ public class MainWindow {
 			//if (myTurn) {
 				rectangle.setOnMouseEntered(e -> {
 					rectangle.setStroke(Color.RED);
-					rectangle.setStrokeWidth(5);
+					rectangle.setStrokeWidth(5);					
 					try {						
 						Aim aim = new Aim(true, x, y);
 						objectOutputStream.writeObject(aim);
@@ -861,7 +879,7 @@ public class MainWindow {
 				});
 				rectangle.setOnMouseExited(e -> {
 					rectangle.setStroke(Color.LIGHTGRAY);
-					rectangle.setStrokeWidth(1);					
+					rectangle.setStrokeWidth(1);
 					try {						
 						Aim aim = new Aim(false, x, y);
 						objectOutputStream.writeObject(aim);
