@@ -53,5 +53,15 @@ public class Ship {
 	 */
 	public int getSize() {
 		return size;
+	}
+
+	/**
+	 * Sets ship's size
+	 * 
+	 * @param size the size to set
+	 */
+	public void setSize(int size) {
+		this.size = size;
 	}	
+	
 }
