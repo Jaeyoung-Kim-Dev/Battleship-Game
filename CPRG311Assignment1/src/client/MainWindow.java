@@ -75,6 +75,11 @@ public class MainWindow {
 	private ObjectInputStream objectInputStream;
 
 	/**
+	 * Validates network is connected to the server.
+	 */
+	private boolean connected = false;
+	
+	/**
 	 * Button to open the connect form.
 	 */
 	private Button buttonConnect;
@@ -199,20 +204,20 @@ public class MainWindow {
 		title.setPadding(new Insets(20, 15, 40, 15));
 
 		Text titleText = new Text("BATTLESHIP GAME");
-		
+
 		titleText.setCache(true);
-        titleText.setFill(Color.WHITE);
-        titleText.setFont(Font.font("verdana", FontWeight.BOLD, 70));
-        DropShadow ds=new DropShadow();
-        ds.setOffsetX(7.0);
-        ds.setOffsetY(7.0);
-        ds.setColor(Color.NAVY);
-        titleText.setEffect(ds);
-		
-		/*
-		titleText.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 60));
 		titleText.setFill(Color.WHITE);
-*/
+		titleText.setFont(Font.font("verdana", FontWeight.BOLD, 70));
+		DropShadow ds = new DropShadow();
+		ds.setOffsetX(7.0);
+		ds.setOffsetY(7.0);
+		ds.setColor(Color.NAVY);
+		titleText.setEffect(ds);
+
+		/*
+		 * titleText.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR,
+		 * 60)); titleText.setFill(Color.WHITE);
+		 */
 		title.setCenter(titleText);
 
 		return title;
@@ -228,22 +233,20 @@ public class MainWindow {
 		BorderPane footer = new BorderPane();
 		footer.setPadding(new Insets(15, 15, 15, 15));
 
-		Text titleText = new Text("Designed and Developed by JAEYOUNG KIM"); //"DESIGNED & DEVELOPED BY JAEYOUNG KIM");
+		Text titleText = new Text("Designed and Developed by JAEYOUNG KIM"); // "DESIGNED & DEVELOPED BY JAEYOUNG KIM");
 		titleText.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
 		titleText.setFill(Color.WHITE);
-		DropShadow ds=new DropShadow();
-        ds.setOffsetX(4.0);
-        ds.setOffsetY(4.0);
-        ds.setColor(Color.NAVY);
-        titleText.setEffect(ds);
-		
-		
+		DropShadow ds = new DropShadow();
+		ds.setOffsetX(4.0);
+		ds.setOffsetY(4.0);
+		ds.setColor(Color.NAVY);
+		titleText.setEffect(ds);
+
 		footer.setCenter(titleText);
 
 		return footer;
 	}
-	
-	
+
 	/**
 	 * Pane of creating game
 	 * 
@@ -402,6 +405,7 @@ public class MainWindow {
 			port = Integer.parseInt(portField.getText());
 
 			connect(ip, port);
+			connected = true;
 
 		});
 		return grid;
@@ -457,6 +461,7 @@ public class MainWindow {
 
 		addMessage("Disconnected.");
 
+		connected = false;
 		// } catch (IOException e) {
 		// e.printStackTrace();
 		// addMessage("Unable to disconnect.");
@@ -601,7 +606,7 @@ public class MainWindow {
 			shipSize.setFont(Font.font("Arial", FontWeight.BOLD, 40));
 			shipSize.setFill(Color.WHITE);
 			myScoreboard.add(shipSize, i, 1);
-			GridPane.setHalignment(shipSize, HPos.CENTER);
+			GridPane.setHalignment(shipSize, HPos.CENTER);			
 		}
 
 		return myScoreboard;
@@ -763,11 +768,9 @@ public class MainWindow {
 					myGrid[start_x + i][start_y].getInitial().setFill(Color.RED);
 					myGrid[start_x + i][start_y].getInitial()
 							.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
-					// myGrid[start_x + i][start_y].getInitial().setVisible(true);
 					try {
 						Thread.sleep(100);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -781,7 +784,6 @@ public class MainWindow {
 					myGrid[start_x][start_y + i].getInitial().setFill(Color.RED);
 					myGrid[start_x][start_y + i].getInitial()
 							.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
-					// myGrid[start_x][start_y + i].getInitial().setVisible(true);
 					try {
 						Thread.sleep(150);
 					} catch (InterruptedException e) {
@@ -791,7 +793,6 @@ public class MainWindow {
 				try {
 					Thread.sleep(300);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				shipPlaced = true;
@@ -819,7 +820,6 @@ public class MainWindow {
 	public Pane createEnemyMap() {
 		BorderPane root = new BorderPane();
 		root.setPadding(new Insets(15, 15, 15, 15));
-		// root.setStyle("-fx-background-color: #336699;");
 		root.setPrefSize(MAP_WIDTH + 30, MAP_HEIGHT + 30);
 
 		Pane titles = new Pane();
@@ -840,7 +840,7 @@ public class MainWindow {
 
 	/**
 	 * 
-	 * @author kornk
+	 * @author Jaeyoung Kim
 	 *
 	 */
 	public class EnemyTile extends StackPane {
@@ -866,28 +866,30 @@ public class MainWindow {
 
 			setOnMouseClicked(e -> open());
 
-			//if (myTurn) {
-				rectangle.setOnMouseEntered(e -> {
-					rectangle.setStroke(Color.RED);
-					rectangle.setStrokeWidth(5);					
-					try {						
+			rectangle.setOnMouseEntered(e -> {
+				if (connected) {
+				rectangle.setStroke(Color.RED);
+				rectangle.setStrokeWidth(5);				
+					try {
 						Aim aim = new Aim(true, x, y);
 						objectOutputStream.writeObject(aim);
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
-				});
-				rectangle.setOnMouseExited(e -> {
-					rectangle.setStroke(Color.LIGHTGRAY);
-					rectangle.setStrokeWidth(1);
-					try {						
+				}
+			});
+			rectangle.setOnMouseExited(e -> {
+				if (connected) {
+				rectangle.setStroke(Color.LIGHTGRAY);
+				rectangle.setStrokeWidth(1);				
+					try {
 						Aim aim = new Aim(false, x, y);
 						objectOutputStream.writeObject(aim);
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
-				});
-			//}
+				}
+			});
 		}
 
 		public void open() {
@@ -934,7 +936,7 @@ public class MainWindow {
 	}
 
 	/**
-	 * a enemy attack the user attack
+	 * a enemy attacks the user
 	 * 
 	 * @param x x-coordinate
 	 * @param y y-coordinate
@@ -946,6 +948,21 @@ public class MainWindow {
 			myGrid[x][y].getRectangle().setFill(Color.RED);
 			myGrid[x][y].getInitial().setFill(Color.WHITE);
 
+			//TODO: trying to edit ship size, but remove and add text freezing.
+			boolean foundShip = false;
+			int whichShip = 0;
+			for (int i =0; i < ships.size() && !foundShip ; i++) {
+				if(ships.get(i).getInitial() == myGrid[x][y].getInitial().getText()) {
+					foundShip = true;
+					whichShip = i;
+				}
+			}
+			
+			ships.get(whichShip).setSize(ships.get(whichShip).getSize() - 1);
+			Text shipSize = new Text(Integer.toString(ships.get(whichShip).getSize()));			
+			//myScoreboard.getChildren().remove(whichShip,1);
+			//myScoreboard.add(shipSize , whichShip, 1);			
+			
 			totalships--;
 			addMessage("You have " + totalships + " ships left.");
 		} else {
@@ -955,7 +972,6 @@ public class MainWindow {
 		AfterAttack afterAttack = new AfterAttack(username, x, y, _strike, strikeInitial, totalships);
 		try {
 			objectOutputStream.writeObject(afterAttack);
-			// objectOutputStream.reset(); // TODO: necessary?
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -967,7 +983,6 @@ public class MainWindow {
 			myTurn = true;
 			addMessage("It's your turn to stike.");
 		}
-
 	}
 
 	/**
