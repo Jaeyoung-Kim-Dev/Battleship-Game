@@ -6,7 +6,7 @@ It includes server file and client files. Client file can access to the server w
 A pair of clients can play the game together.
 
 ## Technology
-JAVA for front and backend.<br><br>
+`Java` for front and backend.<br><br>
 `JavaFX | Thread | Socket | Serialization`
 
 ## The author:
