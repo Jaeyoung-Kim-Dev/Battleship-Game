@@ -14,4 +14,4 @@ Jaeyoung Kim
 
 ![Screenshot](https://github.com/Jaeyoung-Kim-Dev/Battleship-Game/blob/master/screenshot.jpg?raw=true)
 <br>
-![Demo](https://youtu.be/SlMRXH7slQc)
+[![Demo](https://github.com/Jaeyoung-Kim-Dev/Battleship-Game/blob/master/screenshot.jpg?raw=true)](https://youtu.be/SlMRXH7slQc)
