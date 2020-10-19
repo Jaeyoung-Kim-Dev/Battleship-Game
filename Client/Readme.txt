@@ -1,15 +1,8 @@
-1. A project title:
-Battleship Game 
+How to run ClientDriver
 
-
-2. What the program does:
-This is based on the battleship board game.
-It includes server file and client file. Client file can access to the server while server file is running.
-A pair of clients can play the game together.
-
-3. The date:
-October 7, 2020
-
-
-4. The author:
-Jaeyoung Kim
+1. Open File Explorer for Windows or Finder for Mac.
+2. Locate where the ClientDriver is. (The root of the project foler)
+3. Double click the ClientDriver.jar file.
+4. Press the Connect button on the top right.
+5. Type in Username, IP adress and port number (default: 1234)
+6. Enjoy the game.
