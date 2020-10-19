@@ -15,5 +15,5 @@ Jaeyoung Kim
 ## Screen Shot
 
 Click the screen shot to see the demo video!
-
+ 
 [![Demo](https://github.com/Jaeyoung-Kim-Dev/Battleship-Game/blob/master/screenshot.jpg?raw=true)](https://youtu.be/SlMRXH7slQc)
