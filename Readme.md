@@ -35,7 +35,7 @@
 
 <br/>
 
-## Screen Shot
+## Screen Shots
 
 > Click the picture to see the demo video!
 
