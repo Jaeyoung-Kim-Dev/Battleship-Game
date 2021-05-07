@@ -39,7 +39,7 @@
 
 > Click the picture to see the demo video!
 
-[![Demo](https://github.com/Jaeyoung-Kim-Dev/Battleship-Game/blob/master/screenshot.jpg?raw=true)](https://youtu.be/bTxTnOdCqcQ)
+[![Demo](./screenshot.jpg?raw=true)](https://youtu.be/bTxTnOdCqcQ)
 
 ## Author
 
